@@ -100,6 +100,36 @@ def test_the_game_window_is_found_by_its_title_and_wine_program(x):
     assert X11Platform().client_rect(win) is None  # gone: never an X error
 
 
+def test_a_minimized_window_still_mapped_is_not_on_the_screen(x):
+    """KWin keeps a minimized window mapped (for thumbnails): its state says it is hidden."""
+    from hud.platform import x11
+
+    win = make_window(x, "AzurPromiliaJP", (50, 60, 320, 240), RED)
+    atom = x.lib.XInternAtom(x.display, b"_NET_WM_STATE", 0)
+    hidden = (ctypes.c_ulong * 1)(x.lib.XInternAtom(x.display, b"_NET_WM_STATE_HIDDEN", 0))
+    wm_state = x.lib.XInternAtom(x.display, b"WM_STATE", 0)
+    iconic = (ctypes.c_ulong * 2)(x11.ICONIC_STATE, 0)
+
+    def set_prop(prop, kind, values, n):  # noqa: ANN001, ANN202
+        x.raw.XChangeProperty(x.display, win, prop, kind, 32, PROP_MODE_REPLACE,
+                              ctypes.cast(values, ctypes.c_char_p), n)  # fmt: skip
+        x.lib.XSync(x.display, 0)
+
+    try:
+        plat = x11.X11Platform()
+        assert plat.client_rect(win) == (50, 60, 320, 240)
+        set_prop(atom, x11.XA_ATOM, hidden, 1)  # minimized (EWMH)
+        assert plat.client_rect(win) is None
+        assert win not in {w.id for w in plat.windows()}
+        set_prop(atom, x11.XA_ATOM, None, 0)  # restored
+        assert plat.client_rect(win) == (50, 60, 320, 240)
+        set_prop(wm_state, wm_state, iconic, 2)  # minimized (ICCCM)
+        assert plat.client_rect(win) is None
+    finally:
+        x.raw.XDestroyWindow(x.display, win)
+        x.lib.XSync(x.display, 0)
+
+
 def test_the_window_manager_list_is_used_when_there_is_one(x):
     from hud.platform import x11
 

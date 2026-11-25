@@ -45,6 +45,7 @@ XID = ctypes.c_ulong
 
 SUCCESS = 0
 IS_VIEWABLE = 2  # XWindowAttributes.map_state
+ICONIC_STATE = 3  # WM_STATE's state: minimized (ICCCM)
 INPUT_ONLY = 2  # XWindowAttributes.class
 Z_PIXMAP = 2
 ALL_PLANES = ctypes.c_ulong(-1).value
@@ -328,14 +329,38 @@ def program_of(pid: int, wm_class: tuple[str, str]) -> str:
     return (wm_class[0] or "").lower()
 
 
+_STATE_ATOMS: dict[int, tuple[int, int, int]] = {}  # per connection
+
+
+def minimized(display: int, window: int) -> bool:
+    """Is the window minimized? A compositing window manager (KWin) keeps a minimized
+    window mapped, for its thumbnails; _NET_WM_STATE_HIDDEN or ICCCM's IconicState says
+    so (the HUD would draw over the desktop otherwise)."""
+    atoms = _STATE_ATOMS.get(display)
+    if atoms is None:
+        lib = xlib()
+        atoms = _STATE_ATOMS[display] = tuple(
+            lib.XInternAtom(display, name, 0)
+            for name in (b"_NET_WM_STATE", b"_NET_WM_STATE_HIDDEN", b"WM_STATE"))
+    net_state, hidden, wm_state = atoms
+    _fmt, raw = get_property(display, window, net_state, XA_ATOM)
+    if hidden in _longs(raw):
+        return True
+    _fmt, raw = get_property(display, window, wm_state, wm_state)
+    state = _longs(raw)
+    return bool(state) and state[0] == ICONIC_STATE
+
+
 def client_rect(display: int, window: int) -> Rect | None:
-    """The window's area on the screen (its own pixels, no frame); None once it is gone or
-    not on the screen."""
+    """The window's area on the screen (its own pixels, no frame); None once it is gone,
+    minimized or not on the screen."""
     lib = xlib()
     attrs = XWindowAttributes()
     if not lib.XGetWindowAttributes(display, window, ctypes.byref(attrs)):
         return None
     if attrs.map_state != IS_VIEWABLE or attrs.c_class == INPUT_ONLY:
+        return None
+    if minimized(display, window):
         return None
     x, y, child = ctypes.c_int(), ctypes.c_int(), XID()
     if not lib.XTranslateCoordinates(display, window, attrs.root, 0, 0, ctypes.byref(x),
