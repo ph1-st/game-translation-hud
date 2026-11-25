@@ -178,6 +178,41 @@ def test_a_line_that_wraps_is_matched_across_its_rows():
     assert [r.line for r in rows] == [first] and other == [unrelated]
 
 
+def test_a_label_read_in_pieces_is_covered_whole():
+    from capture.profile import load_profile
+    from hud.covers import CoverMaker
+
+    lk = Lookup([
+        line("ダメージ", "DMG"), line("表示", "Display"), line("ダメージ表示", "Damage Numbers"),
+        line("品質", "Quality"), line("テクスチャ品質", "Texture Quality"),
+    ])  # fmt: skip
+    maker = CoverMaker(lk, CoverCache(None), load_profile("azur-promilia"))
+
+    def pieces(*texts: str, gap: int = 8) -> tuple[np.ndarray, list]:
+        f = np.full((900, 1600, 3), 235, np.uint8)
+        out, x = [], 300
+        for t in texts:
+            out.append(popup_row(f, t, x, 400))
+            x += 15 * len(t) + gap
+        return f, out
+
+    # the reader read the label apart: each piece alone would cover only its part
+    for texts, whole in ((("ダメージ", "表示"), "Damage Numbers"),
+                         (("テクスチャ", "品質"), "Texture Quality")):
+        f, read = pieces(*texts)
+        rows, other = maker.rows(f, read)
+        assert [r.hit.translation for r in rows] == [whole] and other == []
+        assert rows[0].line.text == "".join(texts)
+    # a label and the value at the row's other end are two things
+    f, (label, value) = pieces("テクスチャ品質", "品質", gap=600)
+    rows, _other = maker.rows(f, [label, value])
+    assert sorted(r.hit.translation for r in rows) == ["Quality", "Texture Quality"]
+    # pieces that are no line together keep their own matches
+    f, read = pieces("ダメージ", "品質")
+    rows, _other = maker.rows(f, read)
+    assert sorted(r.hit.translation for r in rows) == ["DMG", "Quality"]
+
+
 def test_light_dialogue_text_read_as_dark_is_drawn_light():
     from capture.profile import load_profile
     from hud.dialogue.component import layout_colours

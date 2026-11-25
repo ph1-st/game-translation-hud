@@ -566,13 +566,14 @@ class LiveCard(Card):
 class ReaderCard(Card):
     """The text reader: the standard one, or MeikiOCR on an NVIDIA graphics card (faster;
     nothing of it ships with the app: installed with one button, after the player agrees
-    to the download). MeikiOCR cannot be chosen without an NVIDIA card."""
+    to the download). MeikiOCR cannot be chosen without an NVIDIA card, nor yet on Linux."""
 
     def __init__(self, win) -> None:  # noqa: ANN001
-        from app.reader import MEIKI, READERS, nvidia_gpu
+        from app.reader import MEIKI, READERS, meiki_system, nvidia_gpu
 
         super().__init__(win, _("Text reader"))
         self.task: Task | None = None
+        self.system = meiki_system()
         self.nvidia = nvidia_gpu()
         row = QHBoxLayout()
         self.reader = combo()
@@ -581,7 +582,8 @@ class ReaderCard(Card):
         if not self.nvidia:
             item = self.reader.model().item(self.reader.findData(MEIKI))
             item.setEnabled(False)
-            item.setToolTip(_("Needs an NVIDIA graphics card"))
+            item.setToolTip(_("Needs an NVIDIA graphics card") if self.system
+                            else _("Windows only for now"))
         self.reader.activated.connect(lambda _i: self._changed())
         row.addWidget(self.reader, 1)
         self.install_btn = button(_("Install"), _("Download MeikiOCR and what it needs, once"))
@@ -612,7 +614,10 @@ class ReaderCard(Card):
         self.install_btn.setVisible(self.task is not None or (chosen == MEIKI and not installed))
         if self.task is not None:
             return
-        if not self.nvidia:
+        if not self.system:
+            text = _("MeikiOCR runs on Windows only for now: this computer reads with the "
+                     "standard reader.")
+        elif not self.nvidia:
             text = _("MeikiOCR needs an NVIDIA graphics card: this computer reads with the "
                      "standard reader.")
         elif chosen != MEIKI:

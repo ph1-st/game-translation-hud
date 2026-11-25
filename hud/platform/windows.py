@@ -3,13 +3,17 @@
 
 The overlay is kept out of every frame with ``SetWindowDisplayAffinity(hwnd,
 WDA_EXCLUDEFROMCAPTURE)`` (Windows 10 2004 or newer): screen capture then shows what lies
-under it, so the HUD never reads its own English.
+under it, so the HUD never reads its own English. Windows 10 refuses that for a window
+with per-pixel alpha (``UpdateLayeredWindow``, what Qt's translucent windows are: error
+8), not for one with a colour key (``SetLayeredWindowAttributes``): there the overlay
+draws with a colour key (hud.overlay.keyed).
 """
 
 from __future__ import annotations
 
 import ctypes
 import logging
+import sys
 import time
 from collections.abc import Callable
 from ctypes import wintypes
@@ -28,6 +32,9 @@ log = logging.getLogger(__name__)
 
 WDA_NONE = 0x0
 WDA_EXCLUDEFROMCAPTURE = 0x11
+GWL_EXSTYLE = -20
+WS_EX_LAYERED = 0x00080000
+LWA_COLORKEY, LWA_ALPHA = 0x1, 0x2
 QUNS_RUNNING_D3D_FULL_SCREEN = 3  # SHQueryUserNotificationState: a D3D game owns the screen
 WM_HOTKEY = 0x0312
 MOD_ALT, MOD_CONTROL, MOD_SHIFT, MOD_WIN = 0x0001, 0x0002, 0x0004, 0x0008
@@ -54,6 +61,15 @@ def _declare() -> tuple[ctypes.WinDLL, ctypes.WinDLL]:
     shell32 = ctypes.WinDLL("shell32")
     sig = {
         "SetWindowDisplayAffinity": ([wintypes.HWND, wintypes.DWORD], wintypes.BOOL),
+        "GetWindowLongPtrW": ([wintypes.HWND, ctypes.c_int], ctypes.c_ssize_t),
+        "SetWindowLongPtrW": ([wintypes.HWND, ctypes.c_int, ctypes.c_ssize_t],
+                              ctypes.c_ssize_t),
+        # (BYTE is unsigned: wintypes.BYTE is a signed char)
+        "SetLayeredWindowAttributes": ([wintypes.HWND, wintypes.DWORD, ctypes.c_ubyte,
+                                        wintypes.DWORD], wintypes.BOOL),
+        "GetLayeredWindowAttributes": ([wintypes.HWND, ctypes.POINTER(wintypes.DWORD),
+                                        ctypes.POINTER(ctypes.c_ubyte),
+                                        ctypes.POINTER(wintypes.DWORD)], wintypes.BOOL),
         "EnumWindows": ([_WNDENUMPROC, wintypes.LPARAM], wintypes.BOOL),
         "IsWindowVisible": ([wintypes.HWND], wintypes.BOOL),
         "IsIconic": ([wintypes.HWND], wintypes.BOOL),
@@ -90,6 +106,15 @@ def _client_rect(hwnd: int) -> Rect | None:
     return pt.x, pt.y, rc.right - rc.left, rc.bottom - rc.top
 
 
+def layered_attributes(hwnd: int) -> tuple[int, int, int] | None:
+    """(colour key as COLORREF, alpha, LWA_ flags) of a layered window, or None."""
+    key, alpha, flags = wintypes.DWORD(), ctypes.c_ubyte(), wintypes.DWORD()
+    if not _user32.GetLayeredWindowAttributes(hwnd, ctypes.byref(key), ctypes.byref(alpha),
+                                              ctypes.byref(flags)):
+        return None
+    return key.value, alpha.value, flags.value
+
+
 def _program_names(pids: set[int]) -> dict[int, str]:
     """Each process's program file name in lower case ("" when it cannot be told)."""
     import psutil
@@ -105,6 +130,7 @@ def _program_names(pids: set[int]) -> dict[int, str]:
 
 class WindowsPlatform(Platform):
     name = "windows"
+    keys_overlay = True
 
     def windows(self) -> list[WindowRef]:
         found: list[tuple[int, str, int, Rect]] = []
@@ -140,8 +166,24 @@ class WindowsPlatform(Platform):
         return MssGrabber() if want == "mss" else DesktopGrabber()
 
     def exclude_from_capture(self, widget: QWidget) -> bool:
-        return bool(_user32.SetWindowDisplayAffinity(int(widget.winId()),
-                                                     WDA_EXCLUDEFROMCAPTURE))
+        ok = bool(_user32.SetWindowDisplayAffinity(int(widget.winId()), WDA_EXCLUDEFROMCAPTURE))
+        self.exclude_error = 0 if ok else ctypes.get_last_error()
+        return ok
+
+    def exclude_detail(self) -> str:
+        return f"error {self.exclude_error}, Windows build {sys.getwindowsversion().build}"
+
+    def key_overlay(self, widget: QWidget, key: tuple[int, int, int], opaque: bool) -> bool:
+        hwnd = int(widget.winId())
+        style = _user32.GetWindowLongPtrW(hwnd, GWL_EXSTYLE)
+        if not style & WS_EX_LAYERED:
+            _user32.SetWindowLongPtrW(hwnd, GWL_EXSTYLE, style | WS_EX_LAYERED)
+        r, g, b = key
+        ok = bool(_user32.SetLayeredWindowAttributes(
+            hwnd, r | g << 8 | b << 16, 255 if opaque else 0, LWA_COLORKEY | LWA_ALPHA))
+        if not ok:
+            self.exclude_error = ctypes.get_last_error()
+        return ok
 
     def hotkeys(self) -> Hotkeys:
         return WinHotkeys()

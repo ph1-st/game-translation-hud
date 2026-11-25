@@ -43,7 +43,7 @@ msgstr "Agregar juego"
 msgid "Another program has the hotkey {keys}: choose others under More."
 msgstr "Otro programa usa el atajo {keys}: elige otro en Más."
 
-#: app/panel/cards.py:889
+#: app/panel/cards.py:894
 msgid "Another program has {keys}: choose other keys."
 msgstr "Otro programa usa {keys}: elige otras teclas."
 
@@ -183,11 +183,11 @@ msgstr "Conectado ({name})"
 msgid "Connecting…"
 msgstr "Conectando…"
 
-#: app/panel/cards.py:732
+#: app/panel/cards.py:737
 msgid "Copies these diagnostics for a bug report"
 msgstr "Copia este diagnóstico para reportar un error"
 
-#: app/panel/cards.py:732
+#: app/panel/cards.py:737
 msgid "Copy report"
 msgstr "Copiar informe"
 
@@ -215,7 +215,7 @@ msgstr "No se pudo conectar con la API de OpenAI (revisa tu conexión a internet
 msgid "Could not talk to {service} ({error})."
 msgstr "No se pudo comunicar con {service} ({error})."
 
-#: app/panel/cards.py:748 app/panel/controls.py:134
+#: app/panel/cards.py:753 app/panel/controls.py:134
 msgid "CPU"
 msgstr "CPU"
 
@@ -235,7 +235,7 @@ msgstr "Detectar"
 msgid "Diagnostics"
 msgstr "Diagnóstico"
 
-#: app/panel/cards.py:785
+#: app/panel/cards.py:790
 msgid "Diagnostics copied."
 msgstr "Diagnóstico copiado."
 
@@ -255,7 +255,7 @@ msgstr "Diálogos sobre vidrio esmerilado"
 msgid "Dialogue, subtitles, narration and choices"
 msgstr "Diálogos, subtítulos, narración y opciones"
 
-#: app/panel/cards.py:660 app/start_window.py:226
+#: app/panel/cards.py:665 app/start_window.py:226
 msgid "Download"
 msgstr "Descargar"
 
@@ -263,15 +263,15 @@ msgstr "Descargar"
 msgid "Download it"
 msgstr "Descargarla"
 
-#: app/panel/cards.py:651
+#: app/panel/cards.py:656
 msgid "Download MeikiOCR and NVIDIA's CUDA libraries ({size})? They stay in the app's models folder, and the text reader runs on your graphics card with them.<br><br>From PyPI: ONNX Runtime's CUDA build (MIT) and NVIDIA's CUDA and cuDNN runtime libraries (NVIDIA's licenses). From Hugging Face: MeikiOCR's models ({license}, LGPL-3.0)."
 msgstr "¿Descargar MeikiOCR y las bibliotecas CUDA de NVIDIA ({size})? Se guardan en la carpeta de modelos de la app, y con ellas el lector de texto funciona en tu tarjeta gráfica.<br><br>Desde PyPI: la versión CUDA de ONNX Runtime (MIT) y las bibliotecas de ejecución CUDA y cuDNN de NVIDIA (licencias de NVIDIA). Desde Hugging Face: los modelos de MeikiOCR ({license}, LGPL-3.0)."
 
-#: app/panel/cards.py:587
+#: app/panel/cards.py:589
 msgid "Download MeikiOCR and what it needs, once"
 msgstr "Descarga MeikiOCR y lo que necesita, una sola vez"
 
-#: app/panel/cards.py:511 app/panel/cards.py:674
+#: app/panel/cards.py:511 app/panel/cards.py:679
 msgid "Download stopped: Install goes on where it stopped."
 msgstr "Descarga detenida: Instalar sigue donde se quedó."
 
@@ -283,7 +283,7 @@ msgstr "Descarga el modelo y el programa que lo ejecuta, una sola vez"
 msgid "Download {name} and the program that runs it ({size})? It translates on this computer, on the graphics card when it can: free, and nothing you read leaves this computer."
 msgstr "¿Descargar {name} y el programa que lo ejecuta ({size})? Traduce en esta computadora, en la tarjeta gráfica cuando puede: gratis, y nada de lo que lees sale de esta computadora."
 
-#: app/panel/cards.py:503 app/panel/cards.py:666
+#: app/panel/cards.py:503 app/panel/cards.py:671
 msgid "Downloading…"
 msgstr "Descargando…"
 
@@ -335,11 +335,11 @@ msgstr "Obtener la traducción"
 msgid "GPU"
 msgstr "GPU"
 
-#: app/panel/cards.py:747
+#: app/panel/cards.py:752
 msgid "GPU (CUDA)"
 msgstr "GPU (CUDA)"
 
-#: app/panel/cards.py:747
+#: app/panel/cards.py:752
 msgid "GPU (DirectML)"
 msgstr "GPU (DirectML)"
 
@@ -351,7 +351,7 @@ msgstr "tarjeta gráfica"
 msgid "Grows with the text"
 msgstr "Crece con el texto"
 
-#: app/panel/cards.py:806
+#: app/panel/cards.py:811
 msgid "Handle on the edge when folded"
 msgstr "Pestaña en el borde al plegarlo"
 
@@ -371,11 +371,11 @@ msgstr "Ocultar / mostrar traducciones"
 msgid "Hide translations"
 msgstr "Ocultar traducciones"
 
-#: app/panel/cards.py:289 app/panel/cards.py:538 app/panel/cards.py:587 app/panel/cards.py:697
+#: app/panel/cards.py:289 app/panel/cards.py:538 app/panel/cards.py:589 app/panel/cards.py:702
 msgid "Install"
 msgstr "Instalar"
 
-#: app/panel/cards.py:649
+#: app/panel/cards.py:654
 msgid "Install MeikiOCR"
 msgstr "Instalar MeikiOCR"
 
@@ -395,7 +395,7 @@ msgstr "Idioma de destino: {language}"
 msgid "Japanese"
 msgstr "Japonés"
 
-#: app/panel/cards.py:823
+#: app/panel/cards.py:828
 msgid "Kept on this computer only: what the next database should add"
 msgstr "Se guardan solo en esta computadora: lo que la próxima base de datos debería añadir"
 
@@ -411,7 +411,7 @@ msgstr "Coreano"
 msgid "last problem: {why}"
 msgstr "último problema: {why}"
 
-#: app/panel/cards.py:798
+#: app/panel/cards.py:803
 msgid "Left"
 msgstr "Izquierda"
 
@@ -451,17 +451,21 @@ msgstr "en vivo: {n} líneas"
 msgid "MeikiOCR (NVIDIA, faster)"
 msgstr "MeikiOCR (NVIDIA, más rápido)"
 
-#: app/panel/cards.py:675
+#: app/panel/cards.py:680
 msgid "MeikiOCR is installed."
 msgstr "MeikiOCR está instalado."
 
-#: app/panel/cards.py:616
+#: app/panel/cards.py:621
 msgid "MeikiOCR needs an NVIDIA graphics card: this computer reads with the standard reader."
 msgstr "MeikiOCR necesita una tarjeta gráfica NVIDIA: esta computadora lee con el lector estándar."
 
-#: app/panel/cards.py:625
+#: app/panel/cards.py:630
 msgid "MeikiOCR reads Japanese games; others use the standard reader."
 msgstr "MeikiOCR lee juegos en japonés; los demás usan el lector estándar."
+
+#: app/panel/cards.py:618
+msgid "MeikiOCR runs on Windows only for now: this computer reads with the standard reader."
+msgstr "Por ahora, MeikiOCR funciona solo en Windows: esta computadora lee con el lector estándar."
 
 #: app/panel/cards.py:88
 msgid "Menus"
@@ -499,7 +503,7 @@ msgstr "Área del nombre guardada."
 msgid "Name area…"
 msgstr "Área del nombre…"
 
-#: app/panel/cards.py:584
+#: app/panel/cards.py:585
 msgid "Needs an NVIDIA graphics card"
 msgstr "Necesita una tarjeta gráfica NVIDIA"
 
@@ -551,7 +555,7 @@ msgstr "Aún no hay base de datos en {language}: solo traduciría la traducción
 msgid "not a database file"
 msgstr "no es un archivo de base de datos"
 
-#: app/panel/cards.py:369 app/panel/cards.py:622
+#: app/panel/cards.py:369 app/panel/cards.py:627
 msgid "Not installed yet: {size} to download, once."
 msgstr "Aún no está instalado: {size} para descargar, una sola vez."
 
@@ -571,7 +575,7 @@ msgstr "Una sola ventana"
 msgid "Open"
 msgstr "Abrir"
 
-#: app/panel/cards.py:830
+#: app/panel/cards.py:835
 msgid "Open folder"
 msgstr "Abrir carpeta"
 
@@ -623,7 +627,7 @@ msgstr "Superposición en marcha ({n} líneas en las bases de datos)."
 msgid "Overlay stopped."
 msgstr "Superposición detenida."
 
-#: app/panel/cards.py:796
+#: app/panel/cards.py:801
 msgid "Panel side"
 msgstr "Lado del panel"
 
@@ -639,7 +643,7 @@ msgstr "Primero pega el enlace de descarga."
 msgid "Pick the game's window (the game must be open)"
 msgstr "Elige la ventana del juego (el juego debe estar abierto)"
 
-#: app/panel/cards.py:708
+#: app/panel/cards.py:713
 msgid "PLaMo Community License"
 msgstr "PLaMo Community License"
 
@@ -691,11 +695,11 @@ msgstr "procesador"
 msgid "Read the game's window to find its language"
 msgstr "Lee la ventana del juego para saber su idioma"
 
-#: app/panel/cards.py:820
+#: app/panel/cards.py:825
 msgid "Reading"
 msgstr "Lectura"
 
-#: app/panel/cards.py:768
+#: app/panel/cards.py:773
 msgid "Reading time (median / slowest 5 %): dialogue {d} · menus {u} · all {t}"
 msgstr "Tiempo de lectura (mediana / 5 % más lento): diálogos {d} · menús {u} · todo {t}"
 
@@ -715,7 +719,7 @@ msgstr "Recomendado: rápido, buenos diálogos"
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: app/panel/cards.py:774
+#: app/panel/cards.py:779
 msgid "Remembered menus: {recalled} · cache {hits} hits / {misses} misses · lines no database had: {unknown}"
 msgstr "Menús recordados: {recalled} · caché {hits} aciertos / {misses} fallos · líneas sin base de datos: {unknown}"
 
@@ -743,7 +747,7 @@ msgstr "Quitar y conservar sus archivos"
 msgid "Reset"
 msgstr "Restablecer"
 
-#: app/panel/cards.py:798
+#: app/panel/cards.py:803
 msgid "Right"
 msgstr "Derecha"
 
@@ -799,7 +803,7 @@ msgstr "Inicia el juego y luego elige su ventana:"
 msgid "Start the overlay"
 msgstr "Iniciar la superposición"
 
-#: app/panel/cards.py:748 app/panel/controls.py:134
+#: app/panel/cards.py:753 app/panel/controls.py:134
 msgid "starting"
 msgstr "iniciando"
 
@@ -827,7 +831,7 @@ msgstr "Iniciando…"
 msgid "Stays on screen"
 msgstr "Permanece en pantalla"
 
-#: app/panel/cards.py:502 app/panel/cards.py:665 app/panel/controls.py:119
+#: app/panel/cards.py:502 app/panel/cards.py:670 app/panel/controls.py:119
 msgid "Stop"
 msgstr "Detener"
 
@@ -863,7 +867,7 @@ msgstr "Texto en"
 msgid "Text reader"
 msgstr "Lector de texto"
 
-#: app/panel/cards.py:749
+#: app/panel/cards.py:754
 msgid "Text reader: {reader} · Capture: {capture}"
 msgstr "Lector de texto: {reader} · Captura: {capture}"
 
@@ -891,7 +895,7 @@ msgstr "La API de Claude rechazó la solicitud: {message}"
 msgid "The Claude model {model} is not available to your API key. Choose another model in the settings."
 msgstr "El modelo de Claude {model} no está disponible para tu clave de API. Elige otro modelo en los ajustes."
 
-#: app/panel/cards.py:757
+#: app/panel/cards.py:762
 msgid "The CPU reader is slow."
 msgstr "El lector por CPU es lento."
 
@@ -927,7 +931,7 @@ msgstr "el título de la ventana del juego"
 msgid "The game's window cannot be captured right now (a lock screen, a lost display?)."
 msgstr "Ahora no se puede capturar la ventana del juego (¿pantalla bloqueada, pantalla desconectada?)."
 
-#: app/panel/cards.py:755
+#: app/panel/cards.py:760
 msgid "The GPU reader did not start; see the app's log."
 msgstr "El lector por GPU no se inició; revisa el registro de la app."
 
@@ -1019,7 +1023,7 @@ msgstr "El {file} que está ahí pasa a las copias de seguridad."
 msgid "There is no {language} database at this link yet. It has: {languages}."
 msgstr "Este enlace aún no tiene una base de datos en {language}. Tiene: {languages}."
 
-#: app/panel/cards.py:619
+#: app/panel/cards.py:624
 msgid "This computer has an NVIDIA graphics card: MeikiOCR reads about twice as fast."
 msgstr "Esta computadora tiene una tarjeta gráfica NVIDIA: MeikiOCR lee unas dos veces más rápido."
 
@@ -1027,7 +1031,7 @@ msgstr "Esta computadora tiene una tarjeta gráfica NVIDIA: MeikiOCR lee unas do
 msgid "This game has no download link yet. Paste the link first."
 msgstr "Este juego aún no tiene enlace de descarga. Primero pega el enlace."
 
-#: app/panel/cards.py:879
+#: app/panel/cards.py:884
 msgid "Those keys cannot be a hotkey: add Ctrl, Alt or Win."
 msgstr "Esas teclas no pueden ser un atajo: agrega Ctrl, Alt o Win."
 
@@ -1047,7 +1051,7 @@ msgstr "Traduce el texto que ninguna base de datos tiene, en cuanto aparece (sol
 msgid "Translation database (*.sqlite *.sqlite3 *.db);;All files (*)"
 msgstr "Base de datos de traducción (*.sqlite *.sqlite3 *.db);;Todos los archivos (*)"
 
-#: app/panel/cards.py:725
+#: app/panel/cards.py:730
 msgid "Try the GPU again"
 msgstr "Probar la GPU de nuevo"
 
@@ -1099,11 +1103,15 @@ msgstr "Dónde está el nombre de quien habla (opcional)"
 msgid "Window"
 msgstr "Ventana"
 
+#: app/panel/cards.py:586
+msgid "Windows only for now"
+msgstr "Por ahora, solo en Windows"
+
 #: app/panel/cards.py:173
 msgid "with a name area"
 msgstr "con área del nombre"
 
-#: app/panel/cards.py:822
+#: app/panel/cards.py:827
 msgid "Write down lines no database has"
 msgstr "Anotar las líneas que no tiene ninguna base de datos"
 
@@ -1147,7 +1155,7 @@ msgstr "{game} agregado."
 msgid "{game} removed."
 msgstr "{game} quitado."
 
-#: app/panel/cards.py:882
+#: app/panel/cards.py:887
 msgid "{keys} is one of the app's other hotkeys already."
 msgstr "{keys} ya es otro de los atajos de la app."
 
@@ -1185,7 +1193,7 @@ msgid_plural "{n} live translations"
 msgstr[0] "{n} traducción en vivo"
 msgstr[1] "{n} traducciones en vivo"
 
-#: app/panel/cards.py:852
+#: app/panel/cards.py:857
 msgid "{n} written down this session and before"
 msgstr "{n} anotadas en esta sesión y antes"
 

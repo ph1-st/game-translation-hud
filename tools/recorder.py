@@ -26,6 +26,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from hud.overlay.keyed import prepare_layer
+
 log = logging.getLogger("hud")
 
 FFMPEG_CANDIDATES = ("data/tools/ffmpeg.exe", "data/tools/ffmpeg", "ffmpeg")
@@ -59,7 +61,7 @@ class Composer:
         for (x, y, rgba), fade in layers:
             got = self._ready.get(id(rgba))
             if got is None or got[0] is not rgba or got[1] != fade:
-                got = (rgba, fade, *_prepare(rgba, fade))
+                got = (rgba, fade, *prepare_layer(rgba, fade))
             ready[id(rgba)] = got
             _, _, colour, through = got
             h, w = rgba.shape[:2]
@@ -71,14 +73,6 @@ class Composer:
             out[y0:y1, x0:x1] = cv2.add(reg, colour[sy, sx])
         self._ready = ready  # layers no longer shown are let go
         return out
-
-
-def _prepare(rgba: np.ndarray, fade: float) -> tuple[np.ndarray, np.ndarray]:
-    """(premultiplied BGR, 255 - alpha per channel) of a layer at *fade*, as bytes."""
-    src = rgba.astype(np.float32) * fade
-    colour = np.ascontiguousarray(np.clip(src[:, :, 2::-1] + 0.5, 0, 255).astype(np.uint8))
-    through = np.clip(255.0 - src[:, :, 3] + 0.5, 0, 255).astype(np.uint8)
-    return colour, cv2.merge([through, through, through])
 
 
 def _raise_priority() -> None:

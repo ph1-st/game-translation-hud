@@ -9,22 +9,29 @@ newest captured frame (:meth:`OverlayWindow.set_frame`) and rebuilt when the pix
 them change, so a scene moving behind a key hint is painted over as it is, never as it
 was. They are built on a thread of their own (:mod:`hud.overlay.builder`); an item whose
 Japanese is not painted over yet is not shown yet.
+
+Where the system will not keep a translucent window out of the capture (Windows 10), the
+window draws with a colour key instead (:mod:`hud.overlay.keyed`): opaque, the key colour
+wherever it is clear, and its items blended onto the newest frame where it draws.
 """
 
 from __future__ import annotations
 
+import logging
+import math
 import threading
 import time
 from dataclasses import dataclass
 
 import numpy as np
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QImage, QPainter
+from PySide6.QtCore import QPoint, QRect, Qt, QTimer
+from PySide6.QtGui import QColor, QGuiApplication, QImage, QPainter, QRegion
 from PySide6.QtWidgets import QWidget
 
 from hud import backdrop
 from hud.items import OverlayItem, reveal_target
 from hud.overlay.builder import BackdropBuilder
+from hud.overlay.keyed import KEY, KeyedComposer
 from hud.overlay.paint import PROVISIONAL_ALPHA, Layer, paint_all, qimage, render_text
 from hud.overlay.reveal import revealed
 from hud.platform import current as current_platform
@@ -34,6 +41,52 @@ FADE_IN_S = 0.12
 REBUILD_DELTA = 2.0  # mean grey change under an erase that rebuilds its backdrop
 ANIMATE_MS = 16  # fades and typing text are drawn this often
 COLLECT_MS = 8  # finished backdrops are picked up this often while any are due
+
+log = logging.getLogger(__name__)
+_translucent_refused: bool | None = None  # (asked once: translucent_refused)
+
+
+def overlay_flags() -> Qt.WindowType:
+    """The overlay's window flags: frameless, on top, click-through, never focused."""
+    return (
+        Qt.WindowType.FramelessWindowHint
+        | Qt.WindowType.WindowStaysOnTopHint
+        | Qt.WindowType.Tool
+        | Qt.WindowType.WindowTransparentForInput
+        | Qt.WindowType.WindowDoesNotAcceptFocus
+        | current_platform().overlay_flags()
+    )
+
+
+def translucent_refused() -> bool:
+    """Does the system refuse to keep a translucent window out of the screen capture, where
+    a colour-keyed one would be kept out (Windows 10)? Asked once, of a window of one
+    transparent pixel made like the overlay."""
+    global _translucent_refused
+    if _translucent_refused is None:
+        _translucent_refused = _ask_translucent_refused()
+    return _translucent_refused
+
+
+def _ask_translucent_refused() -> bool:
+    platform = current_platform()
+    if not platform.keys_overlay or QGuiApplication.platformName() != "windows":
+        return False  # (the tests and the offline tools draw nowhere)
+    probe = QWidget(None, overlay_flags())
+    probe.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+    probe.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+    probe.setGeometry(0, 0, 1, 1)
+    probe.show()
+    try:
+        excluded = platform.exclude_from_capture(probe)
+    finally:
+        probe.hide()
+        probe.deleteLater()
+    if excluded:
+        return False
+    log.warning("the system will not keep a translucent window out of the screen capture "
+                "(%s): the overlay draws with a colour key", platform.exclude_detail())
+    return True
 
 
 def _made_from_frame(item: OverlayItem) -> bool:
@@ -79,17 +132,15 @@ class _Anim:
 
 
 class OverlayWindow(QWidget):
-    def __init__(self) -> None:
-        super().__init__(
-            None,
-            Qt.WindowType.FramelessWindowHint
-            | Qt.WindowType.WindowStaysOnTopHint
-            | Qt.WindowType.Tool
-            | Qt.WindowType.WindowTransparentForInput
-            | Qt.WindowType.WindowDoesNotAcceptFocus
-            | current_platform().overlay_flags(),
-        )
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+    def __init__(self, colour_key: bool | None = None) -> None:
+        """*colour_key*: draw with a colour key, not per-pixel alpha (None: where the
+        system will not keep a translucent window out of the capture)."""
+        super().__init__(None, overlay_flags())
+        self.colour_key = translucent_refused() if colour_key is None else colour_key
+        if self.colour_key:
+            self.setAttribute(Qt.WidgetAttribute.WA_OpaquePaintEvent)
+        else:
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setAttribute(Qt.WidgetAttribute.WA_NoSystemBackground)
         self._anims: dict[str, _Anim] = {}
@@ -109,6 +160,19 @@ class OverlayWindow(QWidget):
         self._collector = QTimer(self)
         self._collector.setInterval(COLLECT_MS)
         self._collector.timeout.connect(self._collect)
+        # colour key: the items blended onto a frame, as tiles (x, y, image, its pixels),
+        # made for (pixels_version, that frame); the window shows nothing before it is
+        # painted once (unveiled), so nothing unpainted ever shows over the game
+        self._keyed = KeyedComposer()
+        self._tiles: list[tuple[int, int, QImage, np.ndarray]] = []
+        self._tiles_for: tuple[int, np.ndarray] | None = None
+        self.unveiled = False
+        self._key_refused = False
+        self.exclude_error = 0  # the system's error when it last refused to exclude it
+        self._unveiler = QTimer(self)  # (the window's own: it goes with the window)
+        self._unveiler.setSingleShot(True)
+        self._unveiler.setInterval(0)
+        self._unveiler.timeout.connect(self._unveil)
 
     # ---- lifecycle --------------------------------------------------------------------
     def show_over(self, rect: tuple[int, int, int, int]) -> None:
@@ -120,9 +184,37 @@ class OverlayWindow(QWidget):
         self.placed_for = (tuple(rect), scale)
         self.setGeometry(to_qt(rect, screen))
         if not self.isVisible():
+            self.unveiled = False
+            if self.colour_key and not self._keyed_up():
+                return
             self.show()
-        self.capture_excluded = current_platform().prepare_overlay(self)
+        self.prepare()
         self.raise_()
+
+    def prepare(self) -> None:
+        """Make the shown window what it must be (its colour key, on top, out of the
+        capture): capture_excluded says whether the frames are without it."""
+        if self.colour_key and not self._keyed_up():
+            return
+        platform = current_platform()
+        self.capture_excluded = platform.prepare_overlay(self)
+        self.exclude_error = 0 if self.capture_excluded else platform.exclude_error
+
+    def _keyed_up(self) -> bool:
+        """Colour key: the window's key set (see-through until it was painted once). A
+        window the system will not key never shows: its key colour would hide the game."""
+        if current_platform().key_overlay(self, KEY, self.unveiled):
+            self._key_refused = False
+            return True
+        if not self._key_refused:  # (asked again every tick: said once)
+            self._key_refused = True
+            log.warning("the overlay's colour key was refused (%s): it stays hidden",
+                        current_platform().exclude_detail())
+        self.hide()
+        self.placed_for = None  # (placed again on the next tick: asked again)
+        self.capture_excluded = False
+        self.exclude_error = current_platform().exclude_error
+        return False
 
     def misplaced(self, rect: tuple[int, int, int, int]) -> bool:
         """Is the window placed for another rect or another scaling of its screen (the
@@ -187,6 +279,7 @@ class OverlayWindow(QWidget):
         """The newest captured frame: backdrops whose pixels changed are built again."""
         first = self._frame is None
         self._frame = frame
+        self._scene_moved(frame)
         for ident, anim in self._anims.items():
             if anim.leaving:
                 continue  # fading out as it was
@@ -204,6 +297,7 @@ class OverlayWindow(QWidget):
         """A newer frame for the panes of frosted glass only: they follow the scene behind
         them closely (a blur of it), more often than the window's tick."""
         self._frame = frame
+        self._scene_moved(frame)
         for ident, anim in self._anims.items():
             if anim.item.frost is not None and not anim.leaving:
                 self._refresh(ident, anim, frame)
@@ -285,6 +379,9 @@ class OverlayWindow(QWidget):
 
     # ---- painting -----------------------------------------------------------------------
     def paintEvent(self, event) -> None:  # noqa: N802 - Qt API
+        if self.colour_key:
+            self._paint_keyed(event)
+            return
         if not self.enabled:
             return
         p = QPainter(self)
@@ -297,6 +394,67 @@ class OverlayWindow(QWidget):
     def _repaint(self) -> None:
         self.pixels_version += 1
         self.update()
+
+    # ---- the colour key -------------------------------------------------------------------
+    def _paint_keyed(self, event) -> None:  # noqa: ANN001
+        p = QPainter(self)
+        p.setCompositionMode(QPainter.CompositionMode.CompositionMode_Source)
+        p.fillRect(event.rect(), QColor(*KEY))
+        p.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
+        if self.enabled:
+            d = float(self.devicePixelRatioF()) or 1.0
+            if abs(d - 1.0) > 1e-3:
+                p.scale(1.0 / d, 1.0 / d)  # tiles are in frame (screen) pixels
+            for x, y, img, _px in self.keyed_tiles():
+                p.drawImage(QPoint(x, y), img)  # (each pixel the overlay's, or clear)
+        p.end()
+        if not self.unveiled and self.isVisible():
+            self._unveiler.start()  # (once this paint is on the screen)
+
+    def keyed_tiles(self) -> list[tuple[int, int, QImage, np.ndarray]]:
+        """The items blended onto the newest frame (made again when either changed)."""
+        frame = self._frame
+        if frame is None:
+            return []
+        made = self._tiles_for
+        if made is None or made[0] != self.pixels_version or made[1] is not frame:
+            version, layers = self.snapshot()
+            tiles = []
+            for x, y, px in self._keyed.tiles(frame, layers):
+                h, w = px.shape[:2]
+                img = QImage(px.data, w, h, w * 4, QImage.Format.Format_ARGB32_Premultiplied)
+                tiles.append((x, y, img, px))
+            self._tiles, self._tiles_for = tiles, (version, frame)
+        return self._tiles
+
+    def _scene_moved(self, frame: np.ndarray) -> None:
+        """Colour key, a newer frame: where the scene under the tiles changed, they are
+        blended onto it again (where it did not, they stay as they are)."""
+        if not self.colour_key or not self._tiles or self._tiles_for is None:
+            return
+        version, old = self._tiles_for
+        if old is frame:
+            return
+        boxes = [(x, y, px.shape[1], px.shape[0]) for x, y, _img, px in self._tiles]
+        if old.shape == frame.shape and all(
+            np.array_equal(old[y : y + h, x : x + w], frame[y : y + h, x : x + w])
+            for x, y, w, h in boxes
+        ):
+            self._tiles_for = (version, frame)
+            return
+        d = float(self.devicePixelRatioF()) or 1.0
+        region = QRegion()
+        for x, y, w, h in boxes:
+            region += QRect(int(x / d) - 1, int(y / d) - 1, math.ceil(w / d) + 3,
+                            math.ceil(h / d) + 3)
+        self.update(region)
+
+    def _unveil(self) -> None:
+        """Colour key: painted once, the window may show what it draws."""
+        if self.unveiled or not self.isVisible():
+            return
+        self.unveiled = True
+        self.prepare()
 
     def snapshot(self) -> tuple[int, list[tuple[Layer, float]]]:
         """(version, what the window shows right now as layers of premultiplied RGBA pixels

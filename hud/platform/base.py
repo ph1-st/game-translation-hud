@@ -156,6 +156,8 @@ class Platform(ABC):
     """One operating system's way of doing what the HUD needs (module docstring)."""
 
     name = "none"
+    keys_overlay = False  # can key_overlay give a window a colour key?
+    exclude_error = 0  # the system's error code when it last refused exclude_from_capture
 
     @abstractmethod
     def windows(self) -> list[WindowRef]:
@@ -182,6 +184,16 @@ class Platform(ABC):
     def exclude_from_capture(self, widget: QWidget) -> bool:
         """Keep *widget*'s window out of the HUD's frames; False when the system refused
         (then the HUD would read its own English)."""
+
+    def exclude_detail(self) -> str:
+        """Why exclude_from_capture last said no, for the log and the report."""
+        return f"error {self.exclude_error}"
+
+    def key_overlay(self, widget: QWidget, key: tuple[int, int, int], opaque: bool) -> bool:
+        """Give *widget*'s window a colour key: its pixels in *key* (RGB) show what lies
+        under it; *opaque* False: the whole window is see-through for now. False when
+        this system cannot (keys_overlay) or refused."""
+        return False
 
     def overlay_flags(self) -> Qt.WindowType:
         """Window flags the overlay adds to its own (frameless, on top, click-through)."""

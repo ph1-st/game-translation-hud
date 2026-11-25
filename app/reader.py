@@ -84,9 +84,15 @@ Downloaded from PyPI and Hugging Face by the app, after you agreed.
 """
 
 
+def meiki_system() -> bool:
+    """Can MeikiOCR run on this system at all? Its CUDA runtime is downloaded as Windows
+    builds: on Linux the standard reader reads, NVIDIA card or not."""
+    return sys.platform == "win32"
+
+
 def nvidia_gpu() -> bool:
     """Is there an NVIDIA graphics card with its driver (CUDA's driver library loads)?"""
-    if sys.platform != "win32":
+    if not meiki_system():
         return False
     import ctypes
 

@@ -91,8 +91,10 @@ def test_the_reader_setting_takes_only_what_it_knows(tmp_path):
     assert Settings.load(p).ocr_reader == "standard"
 
 
-def test_meiki_cannot_be_chosen_without_an_nvidia_card(tmp_path, monkeypatch):
+@pytest.mark.parametrize("windows", [True, False])
+def test_meiki_cannot_be_chosen_without_an_nvidia_card(tmp_path, monkeypatch, windows):
     monkeypatch.setenv("GTHUD_DATA", str(tmp_path / "data"))
+    monkeypatch.setattr("app.reader.meiki_system", lambda: windows)
     monkeypatch.setattr("app.reader.nvidia_gpu", lambda: False)
     import shiboken6
     from PySide6.QtWidgets import QApplication
@@ -108,7 +110,8 @@ def test_meiki_cannot_be_chosen_without_an_nvidia_card(tmp_path, monkeypatch):
         i = card.reader.findData("meiki")
         assert not card.reader.model().item(i).isEnabled()
         assert card.reader.currentData() == "standard" and not card.install_btn.isVisible()
-        assert "NVIDIA" in card.state.text()
+        # on Linux the card is not what is missing: MeikiOCR is Windows only for now
+        assert ("NVIDIA" if windows else "Windows only") in card.state.text()
     finally:
         # deleted now: left to Python, the widget outlives the application and Python
         # crashes as it exits (Linux)

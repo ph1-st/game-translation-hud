@@ -27,7 +27,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from capture.ocr import OcrLine
+from capture.ocr import OcrLine, merge_lines
 from capture.profile import Profile, Region
 from db.lookup import Lookup
 from db.normalize import looks_like_text
@@ -72,6 +72,7 @@ PARAGRAPH_SIZE = 0.25  # ...box heights within this share of each other...
 PARAGRAPH_MAX = 12  # ...at most this many rows matched as one text
 OVERLAP_SHARE = 0.5  # stacked rows share at least this much of the narrower one's columns
 ROW_OVERLAP = 0.25  # rows may overlap by this share of a row height (detector boxes)
+SIDE_GAP = 1.0  # pieces of one label read apart on its row: at most this many heights apart
 _PREFER = {"left": 0, "center": 1, "right": 2}  # equally good alignments: the first
 _KANA_RE = re.compile(r"[぀-ヿ]")
 _KANJI_RE = re.compile(r"[㐀-䶿一-鿿]")
@@ -154,6 +155,7 @@ class CoverMaker:
                     found = match_reading(self.lookup, better.text, whole=True)
                     if found is not None:
                         first[i] = (better, found)
+        first = self._join_pieces(first, fw, fh)
         for ln, hit in first:
             readable = hit is not None or self.readable(ln)
             ext = measure(frame, ln, hit.span, ignore) if hit is not None else None
@@ -178,6 +180,43 @@ class CoverMaker:
                 # text the database does not know: live translation may (hud/pipeline.py)
                 callback(ln.text, UI, None, ln.conf, box_px(ln, fw, fh))
         return rows, other + unmatched
+
+    def _join_pieces(
+        self, first: list[tuple[OcrLine, Hit | None]], fw: int, fh: int
+    ) -> list[tuple[OcrLine, Hit | None]]:
+        """Pieces of one label the reader read apart on its row (ダメージ | 表示, テクスチャ |
+        品質) as one reading, where the whole label is a database line that says more than
+        each piece's own match (which would cover its piece and leave the rest Japanese)."""
+        hits = {id(ln): hit for ln, hit in first}
+        for run in side_by_side([ln for ln, _hit in first], fw, fh):
+            found = self._joined(run, hits)
+            if found is None:
+                continue
+            joined, hit, part = found
+            at = next(i for i, (ln, _hit) in enumerate(first) if ln is part[0])
+            gone = {id(ln) for ln in part}
+            first = [e for e in first if id(e[0]) not in gone]
+            first.insert(min(at, len(first)), (joined, hit))
+        return first
+
+    def _joined(
+        self, run: list[OcrLine], hits: dict[int, Hit | None]
+    ) -> tuple[OcrLine, Hit, list[OcrLine]] | None:
+        """The longest stretch of *run* (left to right) that reads as one database line
+        saying more than each of its pieces: (the joined reading, its hit, the pieces)."""
+        n = len(run)
+        for size in range(n, 1, -1):
+            for start in range(n - size + 1):
+                part = run[start : start + size]
+                merged = merge_lines(part)
+                if len(merged) != 1 or not self.readable(merged[0]):
+                    continue
+                hit = match_reading(self.lookup, merged[0].text, whole=True)
+                if hit is None or not _reaches_every_piece(hit, part):
+                    continue
+                if all(_says_more(hit, hits.get(id(ln))) for ln in part):
+                    return merged[0], hit, part
+        return None
 
     def _match_stack(
         self,
@@ -481,6 +520,60 @@ def rest_of_box(frame: np.ndarray, box: Rect, extent: Extent) -> list[Rect]:
             if found is not None:
                 out.append(found)
     return out
+
+
+def side_by_side(lines: list[OcrLine], fw: int, fh: int) -> list[list[OcrLine]]:
+    """Runs of readings on one row, left to right, each starting at most SIDE_GAP row
+    heights after the one before it ends (one label the reader may have read apart)."""
+    boxes = {id(ln): box_px(ln, fw, fh) for ln in lines}
+    order = sorted(lines, key=lambda ln: boxes[id(ln)][0])
+    taken: set[int] = set()
+    runs: list[list[OcrLine]] = []
+    for ln in order:
+        if id(ln) in taken:
+            continue
+        run = [ln]
+        while True:
+            ax, ay, aw, ah = boxes[id(run[-1])]
+            best: tuple[float, OcrLine] | None = None
+            for other in order:
+                if id(other) in taken or any(other is r for r in run):
+                    continue
+                bx, by, bw, bh = boxes[id(other)]
+                h = max(ah, bh)
+                gap = bx - (ax + aw)
+                if not -ROW_OVERLAP * h <= gap <= SIDE_GAP * h:
+                    continue
+                if abs((ay + ah / 2) - (by + bh / 2)) > LEVEL * h:
+                    continue  # (not on one row)
+                if abs(ah - bh) > PARAGRAPH_SIZE * h:
+                    continue  # (not one size)
+                if best is None or gap < best[0]:
+                    best = (gap, other)
+            if best is None:
+                break
+            run.append(best[1])
+        if len(run) > 1:
+            runs.append(run)
+            taken.update(id(r) for r in run)
+    return runs
+
+
+def _reaches_every_piece(hit: Hit, part: list[OcrLine]) -> bool:
+    """Is the line the joined reading matched in every piece, not in one alone?"""
+    i0, i1 = hit.span
+    total = sum(len(ln.text) for ln in part)
+    return i0 < len(part[0].text) and i1 > total - len(part[-1].text)
+
+
+def _says_more(whole: Hit, piece: Hit | None) -> bool:
+    """Does the joined reading's line beat the piece's own match: a better one, or as good
+    and a longer line (it covers the whole label, not the piece)?"""
+    if piece is None:
+        return True
+    if whole.score != piece.score:
+        return whole.score > piece.score
+    return len(whole.line.key) > len(piece.line.key)
 
 
 def paragraph_stacks(lines: list[OcrLine], fw: int, fh: int) -> list[list[OcrLine]]:

@@ -82,7 +82,9 @@ Every tick (`hud/pipeline.py`):
 
 1. **Capture** the game window's picture (`hud/platform`: Desktop Duplication on Windows,
    the window's own contents through XComposite on X11; the overlay and the panel are never
-   in it).
+   in it). Windows 10 keeps no translucent window out of the capture, only one with a
+   colour key: there the overlay draws with one (`hud/overlay/keyed.py`), its items blended
+   onto the newest frame where it draws.
 2. **Plan**: which rows changed since the last read; the dialogue band first, menus at most
    once a second while a conversation runs. With no conversation up, the whole frame is
    read in one go. While the picture moves (a 3D scene, a list scrolling) reads are spaced

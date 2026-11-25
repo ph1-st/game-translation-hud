@@ -461,6 +461,8 @@ class HudApp:
             "ocr": self.core.engine.diagnostics(),
             "platform": self.platform.name,
             "capture": self.source.backend,
+            "overlay": "colour key" if self.overlay.colour_key else "translucent",
+            "exclude_error": self.overlay.exclude_error,
             "window": self.window.title if self.window is not None else "",
             "problem": self.problem.value if self.problem else "",
             "problem_text": problem_text(self.problem) if self.problem else "",
@@ -535,10 +537,11 @@ class HudApp:
             self.overlay.show_over(rect)
             self._raised()
             if not self.overlay.capture_excluded:
-                log.warning("the overlay is NOT excluded from capture; asking again")
+                log.warning("the overlay is NOT excluded from capture (%s); asking again",
+                            self.platform.exclude_detail())
         elif not self.overlay.capture_excluded and now - self._exclude_at >= EXCLUDE_RETRY_S:
             self._exclude_at = now  # (refused once: the system may say yes now)
-            self.overlay.capture_excluded = self.platform.prepare_overlay(self.overlay)
+            self.overlay.prepare()
 
     def _keep_on_top(self, now: float) -> None:
         second = int(now - self.started)
