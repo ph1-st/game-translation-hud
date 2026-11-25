@@ -94,6 +94,7 @@ def test_the_reader_setting_takes_only_what_it_knows(tmp_path):
 def test_meiki_cannot_be_chosen_without_an_nvidia_card(tmp_path, monkeypatch):
     monkeypatch.setenv("GTHUD_DATA", str(tmp_path / "data"))
     monkeypatch.setattr("app.reader.nvidia_gpu", lambda: False)
+    import shiboken6
     from PySide6.QtWidgets import QApplication
 
     QApplication.instance() or QApplication([])
@@ -102,11 +103,16 @@ def test_meiki_cannot_be_chosen_without_an_nvidia_card(tmp_path, monkeypatch):
     settings = Settings()
     settings.ocr_reader = "meiki"  # (chosen on another computer)
     card = ReaderCard(type("Win", (), {"settings": settings})())
-    card.refresh()
-    i = card.reader.findData("meiki")
-    assert not card.reader.model().item(i).isEnabled()
-    assert card.reader.currentData() == "standard" and not card.install_btn.isVisible()
-    assert "NVIDIA" in card.state.text()
+    try:
+        card.refresh()
+        i = card.reader.findData("meiki")
+        assert not card.reader.model().item(i).isEnabled()
+        assert card.reader.currentData() == "standard" and not card.install_btn.isVisible()
+        assert "NVIDIA" in card.state.text()
+    finally:
+        # deleted now: left to Python, the widget outlives the application and Python
+        # crashes as it exits (Linux)
+        shiboken6.delete(card)
 
 
 def test_the_helper_takes_onnxruntime_from_the_downloaded_folder(tmp_path):
