@@ -1,0 +1,130 @@
+# Human-curated glossary: names, places, terms. Always wins over machine output.
+# type: character | place | term | item | faction
+# Names below are provisional romanizations from the CBT footage; fix as official spellings appear.
+- jp: テララ
+  en: Terara
+  type: character
+- jp: ルルカ
+  en: Luluka
+  type: character
+- jp: ルミィ
+  en: Lumie
+  type: character
+- jp: シンフォーリア
+  en: Symphoria
+  type: character
+- jp: 村長
+  en: Village Chief
+  type: character
+- jp: アビイ
+  en: Abby
+  type: character
+- jp: カタル
+  en: Katal
+  type: character
+- jp: リリカ
+  en: Lilica
+  type: character
+- jp: ソール
+  en: Sol
+  type: character
+- jp: エンカク
+  en: Enkaku
+  type: character
+- jp: ティティ
+  en: Titi
+  type: character
+- jp: ポーヤ
+  en: Poya
+  type: character
+- jp: ウーチ
+  en: Uchi
+  type: character
+- jp: ラル
+  en: Lal
+  type: character
+- jp: モモ
+  en: Momo
+  type: character
+- jp: ティナナ
+  en: Tinana
+  type: character
+- jp: ミィティ
+  en: Mitty
+  type: character
+- jp: アダイヤ
+  en: Adaiya
+  type: character
+- jp: 村民たち
+  en: Villagers
+  type: character
+- jp: シフォン
+  en: Chiffon
+  type: character
+- jp: 星臨者
+  en: Starfallen One
+  type: term
+  notes: the player character's title
+- jp: ソザンカ
+  en: Sozanka
+  type: term
+  notes: deity / honorific "Lady Sozanka"
+- jp: シャルル村
+  en: Charles Village
+  type: place
+- jp: 芽吹の谷
+  en: Budding Valley
+  type: place
+- jp: キボ
+  en: Kibo
+  type: term
+  notes: companion creatures
+- jp: スターリンク
+  en: Star Link
+  type: term
+- jp: ステラカード
+  en: Stella Card
+  type: item
+- jp: 満腹度
+  en: Satiety
+  type: term
+# seen at 4:34-4:39 of the CBT footage (provisional, like the rest)
+- jp: パモーラ
+  en: Pamora
+  type: character
+  notes: a great bird of the Winged Folk
+- jp: スカイホーク
+  en: Skyhawk
+  type: character
+  notes: the Winged Folk's hawks
+- jp: カニア
+  en: Kania
+  type: character
+- jp: 翼人
+  en: Winged Folk
+  type: faction
+- jp: 凶獣
+  en: fiendbeast
+  type: term
+  notes: the rampaging beasts plaguing the valley
+- jp: 鷹主
+  en: Hawkmaster
+  type: term
+  notes: a title, 「鷹主」さま
+- jp: パミー族
+  en: Pami
+  type: faction
+- jp: ボアラーガ
+  en: Boaraga
+  type: term
+  notes: a creature
+- jp: タキトビ
+  en: takitobi
+  type: item
+  notes: a fish the Skyhawks love
+- jp: 風隠れ岩
+  en: Windveil Rock
+  type: place
+- jp: タナの火祭り
+  en: Tana Fire Festival
+  type: term

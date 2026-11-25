@@ -1,0 +1,1198 @@
+# Spanish (neutral Latin American) translation of the Game Translation HUD interface.
+# Regenerate the template with: python tools/i18n_extract.py
+msgid ""
+msgstr ""
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app/panel/window.py:356
+msgid "A database is being downloaded"
+msgstr "Se está descargando una base de datos"
+
+#: app/start_window.py:576
+msgid "A newer {language} database is available."
+msgstr "Hay una base de datos más nueva en {language}."
+
+#: app/dbfolder.py:105
+msgid "a {language} database"
+msgstr "una base de datos en {language}"
+
+#: app/start_window.py:577
+msgid "A {language} database is available."
+msgstr "Hay una base de datos en {language}."
+
+#: app/panel/cards.py:497
+msgid "Accept and install"
+msgstr "Aceptar e instalar"
+
+#: app/dialogs.py:144
+msgid "Add"
+msgstr "Agregar"
+
+#: app/dialogs.py:120 app/start_window.py:347
+msgid "Add a game"
+msgstr "Agregar un juego"
+
+#: app/start_window.py:141
+msgid "Add game"
+msgstr "Agregar juego"
+
+#: app/session.py:228
+msgid "Another program has the hotkey {keys}: choose others under More."
+msgstr "Otro programa usa el atajo {keys}: elige otro en Más."
+
+#: app/panel/cards.py:889
+msgid "Another program has {keys}: choose other keys."
+msgstr "Otro programa usa {keys}: elige otras teclas."
+
+#: app/library.py:250
+msgid "Any other game (no preset)"
+msgstr "Cualquier otro juego (sin preajuste)"
+
+#: app/panel/cards.py:439
+msgid "API key"
+msgstr "Clave de API"
+
+#: app/panel/cards.py:176
+msgid "Area: the preset's"
+msgstr "Área: la del preajuste"
+
+#: app/panel/cards.py:173
+msgid "Area: yours"
+msgstr "Área: la tuya"
+
+#: app/start_window.py:236
+msgid "Ask the link whether there is a newer database (nothing is downloaded)"
+msgstr "Pregunta al enlace si hay una base de datos más nueva (no se descarga nada)"
+
+#: app/start_window.py:565
+msgid "Asking the link…"
+msgstr "Consultando el enlace…"
+
+#: app/panel/cards.py:149
+msgid "Back to the preset's own areas"
+msgstr "Volver a las áreas del preajuste"
+
+#: app/panel/cards.py:51
+msgid "Balanced (recommended)"
+msgstr "Equilibrado (recomendado)"
+
+#: translate/local.py:76
+msgid "Best, for a graphics card with 8 GB or more"
+msgstr "El mejor, para una tarjeta gráfica de 8 GB o más"
+
+#: app/panel/cards.py:295
+msgid "Built with PLaMo · {license}"
+msgstr "Built with PLaMo · {license}"
+
+#: app/region_picker.py:58
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: app/panel/cards.py:42
+msgid "ChatGPT (your API key)"
+msgstr "ChatGPT (tu clave de API)"
+
+#: translate/backends/openai.py:159
+msgid "ChatGPT declined to translate this text."
+msgstr "ChatGPT se negó a traducir este texto."
+
+#: app/start_window.py:235
+msgid "Check for updates"
+msgstr "Buscar actualizaciones"
+
+#: app/panel/cards.py:275
+msgid "Check that the engine works"
+msgstr "Comprueba que el motor funciona"
+
+#: app/start_window.py:529
+msgid "Checking the file…"
+msgstr "Revisando el archivo…"
+
+#: translate/languages.py
+msgid "Chinese (Simplified)"
+msgstr "Chino (simplificado)"
+
+#: translate/languages.py
+msgid "Chinese (Traditional)"
+msgstr "Chino (tradicional)"
+
+#: app/start_window.py:511
+msgid "Choose a database file"
+msgstr "Elige un archivo de base de datos"
+
+#: app/panel/window.py:433
+msgid "Choose a game first (◀ Games)."
+msgstr "Primero elige un juego (◀ Juegos)."
+
+#: app/dialogs.py:76
+msgid "Choose the game window"
+msgstr "Elige la ventana del juego"
+
+#: app/panel/window.py:470
+msgid "Choose the game window, and the overlay starts."
+msgstr "Elige la ventana del juego y la superposición se iniciará."
+
+#: app/panel/controls.py:71
+msgid "Choose window…"
+msgstr "Elegir ventana…"
+
+#: app/dialogs.py:136 app/dialogs.py:188
+msgid "Choose…"
+msgstr "Elegir…"
+
+#: app/panel/cards.py:41
+msgid "Claude (your API key)"
+msgstr "Claude (tu clave de API)"
+
+#: app/panel/cards.py:45
+msgid "Claude API key (sk-ant-…)"
+msgstr "Clave de la API de Claude (sk-ant-…)"
+
+#: translate/backends/claude.py:118
+msgid "Claude declined to translate this text."
+msgstr "Claude se negó a traducir este texto."
+
+#: translate/backends/claude.py:20
+msgid "Claude Haiku 5.5 — fastest, cheapest"
+msgstr "Claude Haiku 5.5: el más rápido y económico"
+
+#: translate/backends/claude.py:22
+msgid "Claude Opus 5.5 — best quality, most expensive"
+msgstr "Claude Opus 5.5: la mejor calidad, el más caro"
+
+#: translate/backends/claude.py:21
+msgid "Claude Sonnet 5.5 — better quality, costs more"
+msgstr "Claude Sonnet 5.5: mejor calidad, cuesta más"
+
+#: app/panel/edge.py:66 app/panel/window.py:501
+msgid "Close the app"
+msgstr "Cerrar la app"
+
+#: app/panel/window.py:164
+msgid "Close the app (the overlay with it)"
+msgstr "Cerrar la app (y la superposición)"
+
+#: translate/backends/claude.py:129 translate/backends/openai.py:85
+msgid "Connected ({name})"
+msgstr "Conectado ({name})"
+
+#: app/start_window.py:479
+msgid "Connecting…"
+msgstr "Conectando…"
+
+#: app/panel/cards.py:732
+msgid "Copies these diagnostics for a bug report"
+msgstr "Copia este diagnóstico para reportar un error"
+
+#: app/panel/cards.py:732
+msgid "Copy report"
+msgstr "Copiar informe"
+
+#: app/start_window.py:593
+msgid "Could not ask the link: {why}"
+msgstr "No se pudo consultar el enlace: {why}"
+
+#: app/dbfolder.py:133
+msgid "could not be read"
+msgstr "no se pudo leer"
+
+#: app/dbfolder.py:151
+msgid "could not be read ({error})"
+msgstr "no se pudo leer ({error})"
+
+#: translate/backends/claude.py:48
+msgid "Could not reach the Claude API (check your internet connection)."
+msgstr "No se pudo conectar con la API de Claude (revisa tu conexión a internet)."
+
+#: translate/backends/openai.py:44
+msgid "Could not reach the OpenAI API (check your internet connection)."
+msgstr "No se pudo conectar con la API de OpenAI (revisa tu conexión a internet)."
+
+#: translate/backends/http.py:83
+msgid "Could not talk to {service} ({error})."
+msgstr "No se pudo comunicar con {service} ({error})."
+
+#: app/panel/cards.py:748 app/panel/controls.py:134
+msgid "CPU"
+msgstr "CPU"
+
+#: app/start_window.py:500
+msgid "Database downloaded and checked: {n} lines."
+msgstr "Base de datos descargada y verificada: {n} líneas."
+
+#: app/start_window.py:260
+msgid "Database folder"
+msgstr "Carpeta de bases de datos"
+
+#: app/dialogs.py:199 app/dialogs.py:248 app/dialogs.py:258 app/dialogs.py:263
+msgid "Detect"
+msgstr "Detectar"
+
+#: app/panel/controls.py:135 app/panel/controls.py:84
+msgid "Diagnostics"
+msgstr "Diagnóstico"
+
+#: app/panel/cards.py:785
+msgid "Diagnostics copied."
+msgstr "Diagnóstico copiado."
+
+#: app/panel/cards.py:115 app/panel/cards.py:86
+msgid "Dialogue"
+msgstr "Diálogos"
+
+#: app/panel/cards.py:251
+msgid "Dialogue area saved."
+msgstr "Área de diálogo guardada."
+
+#: app/panel/cards.py:117
+msgid "Dialogue on frosted glass"
+msgstr "Diálogos sobre vidrio esmerilado"
+
+#: app/panel/cards.py:87
+msgid "Dialogue, subtitles, narration and choices"
+msgstr "Diálogos, subtítulos, narración y opciones"
+
+#: app/panel/cards.py:660 app/start_window.py:226
+msgid "Download"
+msgstr "Descargar"
+
+#: app/start_window.py:252
+msgid "Download it"
+msgstr "Descargarla"
+
+#: app/panel/cards.py:651
+msgid "Download MeikiOCR and NVIDIA's CUDA libraries ({size})? They stay in the app's models folder, and the text reader runs on your graphics card with them.<br><br>From PyPI: ONNX Runtime's CUDA build (MIT) and NVIDIA's CUDA and cuDNN runtime libraries (NVIDIA's licenses). From Hugging Face: MeikiOCR's models ({license}, LGPL-3.0)."
+msgstr "¿Descargar MeikiOCR y las bibliotecas CUDA de NVIDIA ({size})? Se guardan en la carpeta de modelos de la app, y con ellas el lector de texto funciona en tu tarjeta gráfica.<br><br>Desde PyPI: la versión CUDA de ONNX Runtime (MIT) y las bibliotecas de ejecución CUDA y cuDNN de NVIDIA (licencias de NVIDIA). Desde Hugging Face: los modelos de MeikiOCR ({license}, LGPL-3.0)."
+
+#: app/panel/cards.py:587
+msgid "Download MeikiOCR and what it needs, once"
+msgstr "Descarga MeikiOCR y lo que necesita, una sola vez"
+
+#: app/panel/cards.py:511 app/panel/cards.py:674
+msgid "Download stopped: Install goes on where it stopped."
+msgstr "Descarga detenida: Instalar sigue donde se quedó."
+
+#: app/panel/cards.py:289
+msgid "Download the model and the program that runs it, once"
+msgstr "Descarga el modelo y el programa que lo ejecuta, una sola vez"
+
+#: app/panel/cards.py:488
+msgid "Download {name} and the program that runs it ({size})? It translates on this computer, on the graphics card when it can: free, and nothing you read leaves this computer."
+msgstr "¿Descargar {name} y el programa que lo ejecuta ({size})? Traduce en esta computadora, en la tarjeta gráfica cuando puede: gratis, y nada de lo que lees sale de esta computadora."
+
+#: app/panel/cards.py:503 app/panel/cards.py:666
+msgid "Downloading…"
+msgstr "Descargando…"
+
+#: app/panel/cards.py:145
+msgid "Drag a box over the game's dialogue box"
+msgstr "Dibuja un recuadro sobre el cuadro de diálogo del juego"
+
+#: app/panel/cards.py:234
+msgid "Drag a box over the game's dialogue box: everywhere its text can appear"
+msgstr "Dibuja un recuadro sobre el cuadro de diálogo del juego: todo donde pueda aparecer su texto"
+
+#: app/panel/cards.py:233
+msgid "Drag a box over where the speaker's name appears"
+msgstr "Dibuja un recuadro donde aparece el nombre de quien habla"
+
+#: app/start_window.py:395
+msgid "Empty"
+msgstr "Vacía"
+
+#: app/panel/window.py:242
+msgid "Fold away ({keys})"
+msgstr "Plegar ({keys})"
+
+#: app/panel/hotkeys.py:14
+msgid "Fold the panel"
+msgstr "Plegar el panel"
+
+#: app/start_window.py:191
+msgid "Game settings"
+msgstr "Ajustes del juego"
+
+#: app/start_window.py:132
+msgid "GAMES"
+msgstr "JUEGOS"
+
+#: app/panel/window.py:142
+msgid "Games: stop the HUD and choose a game or its database"
+msgstr "Juegos: detiene el HUD para elegir un juego o su base de datos"
+
+#: app/panel/window.py:492
+msgid "Games…"
+msgstr "Juegos…"
+
+#: app/start_window.py:220
+msgid "Get the translation"
+msgstr "Obtener la traducción"
+
+#: app/panel/controls.py:134
+msgid "GPU"
+msgstr "GPU"
+
+#: app/panel/cards.py:747
+msgid "GPU (CUDA)"
+msgstr "GPU (CUDA)"
+
+#: app/panel/cards.py:747
+msgid "GPU (DirectML)"
+msgstr "GPU (DirectML)"
+
+#: translate/backends/plamo.py:129
+msgid "graphics card"
+msgstr "tarjeta gráfica"
+
+#: app/panel/cards.py:49
+msgid "Grows with the text"
+msgstr "Crece con el texto"
+
+#: app/panel/cards.py:806
+msgid "Handle on the edge when folded"
+msgstr "Pestaña en el borde al plegarlo"
+
+#: app/panel/window.py:104
+msgid "Help"
+msgstr "Ayuda"
+
+#: app/start_window.py:197
+msgid "Help (opens the guide)"
+msgstr "Ayuda (abre la guía)"
+
+#: app/panel/edge.py:64 app/panel/hotkeys.py:12 app/panel/window.py:499
+msgid "Hide / show translations"
+msgstr "Ocultar / mostrar traducciones"
+
+#: app/panel/controls.py:123 app/panel/controls.py:63
+msgid "Hide translations"
+msgstr "Ocultar traducciones"
+
+#: app/panel/cards.py:289 app/panel/cards.py:538 app/panel/cards.py:587 app/panel/cards.py:697
+msgid "Install"
+msgstr "Instalar"
+
+#: app/panel/cards.py:649
+msgid "Install MeikiOCR"
+msgstr "Instalar MeikiOCR"
+
+#: app/panel/cards.py:496
+msgid "Install {name}"
+msgstr "Instalar {name}"
+
+#: app/panel/cards.py:52
+msgid "Instant (may flicker on hard text)"
+msgstr "Instantáneo (puede parpadear con texto difícil)"
+
+#: app/panel/cards.py:389
+msgid "Into {language}"
+msgstr "Idioma de destino: {language}"
+
+#: translate/languages.py
+msgid "Japanese"
+msgstr "Japonés"
+
+#: app/panel/cards.py:823
+msgid "Kept on this computer only: what the next database should add"
+msgstr "Se guardan solo en esta computadora: lo que la próxima base de datos debería añadir"
+
+#: app/panel/cards.py:373
+msgid "Key saved: {key}"
+msgstr "Clave guardada: {key}"
+
+#: translate/languages.py
+msgid "Korean"
+msgstr "Coreano"
+
+#: app/panel/cards.py:561
+msgid "last problem: {why}"
+msgstr "último problema: {why}"
+
+#: app/panel/cards.py:798
+msgid "Left"
+msgstr "Izquierda"
+
+#: app/start_window.py:390
+msgid "lines are translated live, if live translation is on"
+msgstr "las líneas se traducen en vivo, si la traducción en vivo está activada"
+
+#: app/panel/cards.py:264
+msgid "Live translation"
+msgstr "Traducción en vivo"
+
+#: app/session.py:319
+msgid "Live translation is off."
+msgstr "La traducción en vivo está desactivada."
+
+#: app/session.py:340
+msgid "Live translation is off: {why}"
+msgstr "La traducción en vivo está desactivada: {why}"
+
+#: app/session.py:225 app/session.py:317
+msgid "Live translation is on."
+msgstr "La traducción en vivo está activada."
+
+#: app/panel/window.py:405
+msgid "live translation stopped"
+msgstr "la traducción en vivo se detuvo"
+
+#: app/panel/window.py:406
+msgid "Live translation stopped: {why}"
+msgstr "La traducción en vivo se detuvo: {why}"
+
+#: app/panel/window.py:409
+msgid "live: {n} lines"
+msgstr "en vivo: {n} líneas"
+
+#: app/reader.py:29
+msgid "MeikiOCR (NVIDIA, faster)"
+msgstr "MeikiOCR (NVIDIA, más rápido)"
+
+#: app/panel/cards.py:675
+msgid "MeikiOCR is installed."
+msgstr "MeikiOCR está instalado."
+
+#: app/panel/cards.py:616
+msgid "MeikiOCR needs an NVIDIA graphics card: this computer reads with the standard reader."
+msgstr "MeikiOCR necesita una tarjeta gráfica NVIDIA: esta computadora lee con el lector estándar."
+
+#: app/panel/cards.py:625
+msgid "MeikiOCR reads Japanese games; others use the standard reader."
+msgstr "MeikiOCR lee juegos en japonés; los demás usan el lector estándar."
+
+#: app/panel/cards.py:88
+msgid "Menus"
+msgstr "Menús"
+
+#: app/panel/cards.py:89
+msgid "Menus, labels and other on-screen text"
+msgstr "Menús, etiquetas y otros textos en pantalla"
+
+#: app/panel/controls.py:87
+msgid "More"
+msgstr "Más"
+
+#: app/start_window.py:232
+msgid "Move a database file you have into the game's folder"
+msgstr "Mueve un archivo de base de datos que tengas a la carpeta del juego"
+
+#: app/start_window.py:521
+msgid "Move {file} into the game's database folder?"
+msgstr "¿Mover {file} a la carpeta de bases de datos del juego?"
+
+#: app/dialogs.py:126 app/dialogs.py:156
+msgid "My game"
+msgstr "Mi juego"
+
+#: app/dialogs.py:127 app/dialogs.py:182
+msgid "Name"
+msgstr "Nombre"
+
+#: app/panel/cards.py:251
+msgid "Name area saved."
+msgstr "Área del nombre guardada."
+
+#: app/panel/cards.py:147
+msgid "Name area…"
+msgstr "Área del nombre…"
+
+#: app/panel/cards.py:584
+msgid "Needs an NVIDIA graphics card"
+msgstr "Necesita una tarjeta gráfica NVIDIA"
+
+#: app/panel/cards.py:178
+msgid "No area yet: open a conversation in the game, then Set area…"
+msgstr "Aún no hay área: abre una conversación en el juego y luego Definir área…"
+
+#: translate/backends/claude.py:36
+msgid "No Claude API key is set. Create one at console.anthropic.com (Settings > API keys) and paste it into the settings."
+msgstr "No hay una clave de la API de Claude. Crea una en console.anthropic.com (Settings > API keys) y pégala en los ajustes."
+
+#: app/session.py:421
+msgid "no Claude API key yet: paste one under Live translation (you pay Anthropic for what you use)."
+msgstr "todavía no hay clave de la API de Claude: pega una en Traducción en vivo (le pagas a Anthropic lo que uses)."
+
+#: app/start_window.py:67
+msgid "No database yet"
+msgstr "Aún no hay base de datos"
+
+#: app/panel/controls.py:106
+msgid "No game window chosen"
+msgstr "No se eligió ninguna ventana de juego"
+
+#: app/dialogs.py:263
+msgid "No Japanese, Chinese or Korean text found on the game's screen."
+msgstr "No se encontró texto en japonés, chino o coreano en la pantalla del juego."
+
+#: app/panel/cards.py:373
+msgid "No key saved yet"
+msgstr "Aún no hay clave guardada"
+
+#: translate/backends/openai.py:37
+msgid "No OpenAI API key is set. Create one at platform.openai.com (API keys) and paste it into the settings."
+msgstr "No hay una clave de API de OpenAI. Crea una en platform.openai.com (API keys) y pégala en la configuración."
+
+#: app/session.py:416
+msgid "no OpenAI API key yet: paste one under Live translation (you pay OpenAI for what you use)."
+msgstr "aún no hay clave de API de OpenAI: pega una en Traducción en vivo (le pagas a OpenAI lo que uses)."
+
+#: app/start_window.py:55
+msgid "No {language} database yet"
+msgstr "Aún no hay base de datos en {language}"
+
+#: app/start_window.py:617
+msgid "No {language} database yet: only live translation would translate (switch it on in the HUD). Open the HUD anyway?"
+msgstr "Aún no hay base de datos en {language}: solo traduciría la traducción en vivo (actívala en el HUD). ¿Abrir el HUD de todos modos?"
+
+#: app/dbfolder.py:140
+msgid "not a database file"
+msgstr "no es un archivo de base de datos"
+
+#: app/panel/cards.py:369 app/panel/cards.py:622
+msgid "Not installed yet: {size} to download, once."
+msgstr "Aún no está instalado: {size} para descargar, una sola vez."
+
+#: app/start_window.py:406
+msgid "not used: {why}"
+msgstr "no se usa: {why}"
+
+#: app/panel/cards.py:39
+msgid "Off"
+msgstr "Desactivada"
+
+#: app/panel/cards.py:49
+msgid "One window"
+msgstr "Una sola ventana"
+
+#: app/start_window.py:267
+msgid "Open"
+msgstr "Abrir"
+
+#: app/panel/cards.py:830
+msgid "Open folder"
+msgstr "Abrir carpeta"
+
+#: app/start_window.py:267
+msgid "Open the folder: drop database files in, or take them out"
+msgstr "Abre la carpeta: agrega o quita archivos de bases de datos"
+
+#: app/panel/cards.py:231
+msgid "Open the game with a conversation on screen first."
+msgstr "Primero abre el juego con una conversación en pantalla."
+
+#: app/dialogs.py:248
+msgid "Open the game with some text on screen (and choose its window) first."
+msgstr "Primero abre el juego con algo de texto en pantalla (y elige su ventana)."
+
+#: app/start_window.py:173
+msgid "Open the HUD: the overlay starts and waits for the game"
+msgstr "Abre el HUD: la superposición se inicia y espera al juego"
+
+#: app/panel/cards.py:46
+msgid "OpenAI API key (sk-…)"
+msgstr "Clave de API de OpenAI (sk-…)"
+
+#: app/panel/window.py:411
+msgid "Overlay off"
+msgstr "Superposición desactivada"
+
+#: app/panel/window.py:401
+msgid "Overlay on"
+msgstr "Superposición activada"
+
+#: app/panel/window.py:395
+msgid "Overlay on: it cannot work (see Diagnostics)"
+msgstr "Superposición activada: no puede funcionar (ver Diagnóstico)"
+
+#: app/panel/window.py:399
+msgid "Overlay on: translations hidden"
+msgstr "Superposición activada: traducciones ocultas"
+
+#: app/panel/window.py:397
+msgid "Overlay on: waiting for the game window"
+msgstr "Superposición activada: esperando la ventana del juego"
+
+#: app/session.py:223
+msgid "Overlay running ({n} lines in the databases)."
+msgstr "Superposición en marcha ({n} líneas en las bases de datos)."
+
+#: app/session.py:245
+msgid "Overlay stopped."
+msgstr "Superposición detenida."
+
+#: app/panel/cards.py:796
+msgid "Panel side"
+msgstr "Lado del panel"
+
+#: app/start_window.py:224
+msgid "Paste a download link: a database, or a shared Google Drive folder of them"
+msgstr "Pega un enlace de descarga: una base de datos o una carpeta compartida de Google Drive con ellas"
+
+#: app/start_window.py:473 app/start_window.py:563
+msgid "Paste the download link first."
+msgstr "Primero pega el enlace de descarga."
+
+#: app/dialogs.py:136 app/dialogs.py:188
+msgid "Pick the game's window (the game must be open)"
+msgstr "Elige la ventana del juego (el juego debe estar abierto)"
+
+#: app/panel/cards.py:708
+msgid "PLaMo Community License"
+msgstr "PLaMo Community License"
+
+#: app/panel/cards.py:391
+msgid "PLaMo does not offer it"
+msgstr "PLaMo no lo ofrece"
+
+#: translate/backends/plamo.py:102
+msgid "PLaMo does not translate {language}: choose Claude or ChatGPT under Live translation."
+msgstr "PLaMo no traduce {language}: elige Claude o ChatGPT en Traducción en vivo."
+
+#: app/panel/cards.py:492
+msgid "PLaMo is Preferred Networks' translation model. To use it you accept its license, below: among other things you must be 18 or older (or have a parent's or guardian's consent), and using it for business needs their free registration."
+msgstr "PLaMo es el modelo de traducción de Preferred Networks. Para usarlo aceptas su licencia, abajo: entre otras cosas, debes tener 18 años o más (o el consentimiento de tu madre, padre o tutor), y usarlo con fines comerciales requiere su registro gratuito."
+
+#: app/panel/cards.py:40
+msgid "PLaMo, on this computer (free)"
+msgstr "PLaMo, en esta computadora (gratis)"
+
+#: app/start_window.py:171 app/start_window.py:617
+msgid "Play"
+msgstr "Jugar"
+
+#: app/dialogs.py:196
+msgid "Player"
+msgstr "Jugador"
+
+#: app/dialogs.py:132
+msgid "Preset"
+msgstr "Preajuste"
+
+#: app/dialogs.py:130
+msgid "preset"
+msgstr "preajuste"
+
+#: app/start_window.py:184
+msgid "PRESET"
+msgstr "PREAJUSTE"
+
+#: app/panel/hotkeys.py:38
+msgid "Press the keys… (Esc: keep)"
+msgstr "Pulsa las teclas… (Esc: conservar)"
+
+#: translate/backends/plamo.py:129
+msgid "processor"
+msgstr "procesador"
+
+#: app/dialogs.py:199
+msgid "Read the game's window to find its language"
+msgstr "Lee la ventana del juego para saber su idioma"
+
+#: app/panel/cards.py:820
+msgid "Reading"
+msgstr "Lectura"
+
+#: app/panel/cards.py:768
+msgid "Reading time (median / slowest 5 %): dialogue {d} · menus {u} · all {t}"
+msgstr "Tiempo de lectura (mediana / 5 % más lento): diálogos {d} · menús {u} · todo {t}"
+
+#: app/dialogs.py:252
+msgid "Reading…"
+msgstr "Leyendo…"
+
+#: translate/backends/plamo.py:130
+msgid "Ready ({name}, on the {where})"
+msgstr "Listo ({name}, en el {where})"
+
+#: translate/local.py:72
+msgid "Recommended: fast, good dialogue"
+msgstr "Recomendado: rápido, buenos diálogos"
+
+#: app/dialogs.py:83
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: app/panel/cards.py:774
+msgid "Remembered menus: {recalled} · cache {hits} hits / {misses} misses · lines no database had: {unknown}"
+msgstr "Menús recordados: {recalled} · caché {hits} aciertos / {misses} fallos · líneas sin base de datos: {unknown}"
+
+#: app/dialogs.py:283
+msgid "Remove and delete its files"
+msgstr "Quitar y borrar sus archivos"
+
+#: app/dialogs.py:280
+msgid "Remove game"
+msgstr "Quitar juego"
+
+#: app/dialogs.py:209
+msgid "Remove game…"
+msgstr "Quitar juego…"
+
+#: app/dialogs.py:281
+msgid "Remove {game}?"
+msgstr "¿Quitar {game}?"
+
+#: app/dialogs.py:282
+msgid "Remove, keep its files"
+msgstr "Quitar y conservar sus archivos"
+
+#: app/panel/cards.py:149
+msgid "Reset"
+msgstr "Restablecer"
+
+#: app/panel/cards.py:798
+msgid "Right"
+msgstr "Derecha"
+
+#: app/panel/cards.py:368
+msgid "Runs on this computer: free, and nothing you read leaves it."
+msgstr "Se ejecuta en esta computadora: gratis, y nada de lo que lees sale de ella."
+
+#: app/panel/controls.py:63
+msgid "Same as the hotkey"
+msgstr "Igual que el atajo de teclado"
+
+#: app/panel/cards.py:304
+msgid "Save"
+msgstr "Guardar"
+
+#: app/start_window.py:463
+msgid "Saved."
+msgstr "Guardado."
+
+#: app/panel/cards.py:145
+msgid "Set area…"
+msgstr "Definir área…"
+
+#: app/panel/window.py:492
+msgid "Show / fold the panel"
+msgstr "Mostrar / plegar el panel"
+
+#: app/panel/cards.py:118
+msgid "Show dialogue on frosted glass in the dialogue area (off: covered where it is, like other text)"
+msgstr "Muestra los diálogos sobre vidrio esmerilado en el área de diálogo (desactivado: se cubren donde están, como el resto del texto)"
+
+#: app/panel/controls.py:123
+msgid "Show translations"
+msgstr "Mostrar traducciones"
+
+#: translate/local.py:67
+msgid "Smallest and fastest, for weaker computers"
+msgstr "El más pequeño y rápido, para computadoras más modestas"
+
+#: app/reader.py:28
+msgid "Standard (any graphics card)"
+msgstr "Estándar (cualquier tarjeta gráfica)"
+
+#: app/panel/controls.py:119 app/panel/controls.py:60
+msgid "Start"
+msgstr "Iniciar"
+
+#: app/dialogs.py:79
+msgid "Start the game, then pick its window:"
+msgstr "Inicia el juego y luego elige su ventana:"
+
+#: app/panel/window.py:483 app/panel/window.py:497
+msgid "Start the overlay"
+msgstr "Iniciar la superposición"
+
+#: app/panel/cards.py:748 app/panel/controls.py:134
+msgid "starting"
+msgstr "iniciando"
+
+#: app/panel/cards.py:457
+msgid "Starting the model…"
+msgstr "Iniciando el modelo…"
+
+#: app/session.py:184
+msgid "Starting the overlay (loading the databases and the text reader)…"
+msgstr "Iniciando la superposición (cargando las bases de datos y el lector de texto)…"
+
+#: app/panel/window.py:390
+msgid "Starting the overlay…"
+msgstr "Iniciando la superposición…"
+
+#: app/panel/window.py:450
+msgid "Starting the text reader again…"
+msgstr "Reiniciando el lector de texto…"
+
+#: app/panel/controls.py:115
+msgid "Starting…"
+msgstr "Iniciando…"
+
+#: app/panel/cards.py:133
+msgid "Stays on screen"
+msgstr "Permanece en pantalla"
+
+#: app/panel/cards.py:502 app/panel/cards.py:665 app/panel/controls.py:119
+msgid "Stop"
+msgstr "Detener"
+
+#: app/panel/hotkeys.py:13 app/panel/window.py:483
+msgid "Stop the overlay"
+msgstr "Detener la superposición"
+
+#: app/panel/cards.py:559
+msgid "stopped: {why}"
+msgstr "detenida: {why}"
+
+#: app/start_window.py:148
+msgid "System language"
+msgstr "Idioma del sistema"
+
+#: app/panel/window.py:436
+msgid "Tell the app which window is the game: press 'Choose window…'."
+msgstr "Indica a la app qué ventana es la del juego: pulsa 'Elegir ventana…'."
+
+#: app/panel/cards.py:275
+msgid "Test"
+msgstr "Probar"
+
+#: app/panel/cards.py:457
+msgid "Testing…"
+msgstr "Probando…"
+
+#: app/dialogs.py:142 app/dialogs.py:203
+msgid "Text in"
+msgstr "Texto en"
+
+#: app/panel/cards.py:574
+msgid "Text reader"
+msgstr "Lector de texto"
+
+#: app/panel/cards.py:749
+msgid "Text reader: {reader} · Capture: {capture}"
+msgstr "Lector de texto: {reader} · Captura: {capture}"
+
+#: app/start_window.py:519
+msgid "That file is in the folder already."
+msgstr "Ese archivo ya está en la carpeta."
+
+#: app/start_window.py:445
+msgid "The app's language changes the next time it starts."
+msgstr "El idioma de la app cambiará la próxima vez que se inicie."
+
+#: app/start_window.py:147
+msgid "The app's own language"
+msgstr "El idioma de la propia app"
+
+#: translate/backends/claude.py:44
+msgid "The Claude API is busy right now (too many requests, or overloaded). Wait a minute and try again."
+msgstr "La API de Claude está ocupada en este momento (demasiadas solicitudes o sobrecarga). Espera un minuto e inténtalo de nuevo."
+
+#: translate/backends/claude.py:165
+msgid "The Claude API refused the request: {message}"
+msgstr "La API de Claude rechazó la solicitud: {message}"
+
+#: translate/backends/claude.py:156
+msgid "The Claude model {model} is not available to your API key. Choose another model in the settings."
+msgstr "El modelo de Claude {model} no está disponible para tu clave de API. Elige otro modelo en los ajustes."
+
+#: app/panel/cards.py:757
+msgid "The CPU reader is slow."
+msgstr "El lector por CPU es lento."
+
+#: app/panel/window.py:373
+msgid "The database folder changed: the overlay takes it anew."
+msgstr "La carpeta de bases de datos cambió: la superposición la vuelve a cargar."
+
+#: translate/local.py:195
+msgid "The download failed (HTTP {status})."
+msgstr "La descarga falló (HTTP {status})."
+
+#: translate/local.py:207
+msgid "The download stopped ({error}): try again, it goes on where it stopped."
+msgstr "La descarga se detuvo ({error}): inténtalo de nuevo, sigue donde se quedó."
+
+#: translate/local.py:211
+msgid "The downloaded file is not the one expected (it was damaged on the way): try again."
+msgstr "El archivo descargado no es el esperado (se dañó en el camino): inténtalo de nuevo."
+
+#: hud/app.py:93
+msgid "The game hides its window from screen capture: its text cannot be read."
+msgstr "El juego oculta su ventana de la captura de pantalla: no se puede leer su texto."
+
+#: hud/app.py:97
+msgid "The game runs in exclusive full screen, where no overlay can show: choose borderless or windowed in the game's display settings."
+msgstr "El juego está en pantalla completa exclusiva, donde no se puede mostrar ninguna superposición: elige modo sin bordes o ventana en los ajustes de pantalla del juego."
+
+#: app/dialogs.py:187
+msgid "the game window's title"
+msgstr "el título de la ventana del juego"
+
+#: hud/app.py:90
+msgid "The game's window cannot be captured right now (a lock screen, a lost display?)."
+msgstr "Ahora no se puede capturar la ventana del juego (¿pantalla bloqueada, pantalla desconectada?)."
+
+#: app/panel/cards.py:755
+msgid "The GPU reader did not start; see the app's log."
+msgstr "El lector por GPU no se inició; revisa el registro de la app."
+
+#: app/panel/cards.py:439
+msgid "The key could not be saved: {why}"
+msgstr "No se pudo guardar la clave: {why}"
+
+#: app/start_window.py:209
+msgid "The language you read: the databases in it are used, and live translation translates into it"
+msgstr "El idioma en que lees: se usan las bases de datos en ese idioma y la traducción en vivo traduce a él"
+
+#: app/start_window.py:585
+msgid "The link has no {language} database (yet)."
+msgstr "El enlace no tiene (aún) una base de datos en {language}."
+
+#: app/start_window.py:587
+msgid "The link's host doesn't say whether the file changed: Download fetches it if it did."
+msgstr "El servidor del enlace no indica si el archivo cambió: Descargar lo obtiene si cambió."
+
+#: translate/local.py:277
+msgid "The local model did not start. Its log is in {path}."
+msgstr "El modelo local no arrancó. Su registro está en {path}."
+
+#: translate/local.py:144
+msgid "The local model does not run on this system yet."
+msgstr "El modelo local todavía no funciona en este sistema."
+
+#: translate/backends/plamo.py:158
+msgid "The local model gave no translation."
+msgstr "El modelo local no dio ninguna traducción."
+
+#: translate/backends/plamo.py:85
+msgid "The local model is busy: wait a moment."
+msgstr "El modelo local está ocupado: espera un momento."
+
+#: translate/local.py:343
+msgid "The local model is not installed yet: choose it under Live translation and press Install."
+msgstr "El modelo local aún no está instalado: elígelo en Traducción en vivo y presiona Instalar."
+
+#: translate/backends/plamo.py:154
+msgid "The local model refused the request: {message}"
+msgstr "El modelo local rechazó la solicitud: {message}"
+
+#: translate/backends/plamo.py:86
+msgid "The local model stopped answering."
+msgstr "El modelo local dejó de responder."
+
+#: translate/backends/openai.py:42
+msgid "The OpenAI API is busy right now (too many requests, or overloaded). Wait a minute and try again."
+msgstr "La API de OpenAI está ocupada en este momento (demasiadas solicitudes o sobrecarga). Espera un minuto e inténtalo de nuevo."
+
+#: translate/backends/openai.py:143 translate/backends/openai.py:145
+msgid "The OpenAI API refused the request: {message}"
+msgstr "La API de OpenAI rechazó la solicitud: {message}"
+
+#: translate/backends/openai.py:140
+msgid "The OpenAI model {model} is not available to your API key. Choose another model in the settings."
+msgstr "El modelo de OpenAI {model} no está disponible para tu clave de API. Elige otro modelo en la configuración."
+
+#: app/session.py:201 app/session.py:218
+msgid "The overlay could not start: {why}"
+msgstr "La superposición no pudo iniciar: {why}"
+
+#: app/panel/window.py:419
+msgid "The overlay works again."
+msgstr "La superposición vuelve a funcionar."
+
+#: translate/local.py:228 translate/local.py:235
+msgid "The server's archive is not as expected."
+msgstr "El archivo del servidor no es el esperado."
+
+#: hud/app.py:86
+msgid "The system refused to keep the overlay out of the screen capture, so it would read its own translations: it stays off."
+msgstr "El sistema no permitió excluir la superposición de la captura de pantalla, así que leería sus propias traducciones: queda desactivada."
+
+#: hud/app.py:96
+msgid "The text reader keeps failing: see the log in the data folder."
+msgstr "El lector de texto sigue fallando: revisa el registro en la carpeta de datos."
+
+#: app/panel/cards.py:135
+msgid "The translation types in with the game's text (off: shown whole at once)"
+msgstr "La traducción se escribe al ritmo del texto del juego (desactivado: aparece completa de una vez)"
+
+#: app/start_window.py:524
+msgid "The {file} there now goes to the backups."
+msgstr "El {file} que está ahí pasa a las copias de seguridad."
+
+#: app/library.py:455
+msgid "There is no {language} database at this link yet. It has: {languages}."
+msgstr "Este enlace aún no tiene una base de datos en {language}. Tiene: {languages}."
+
+#: app/panel/cards.py:619
+msgid "This computer has an NVIDIA graphics card: MeikiOCR reads about twice as fast."
+msgstr "Esta computadora tiene una tarjeta gráfica NVIDIA: MeikiOCR lee unas dos veces más rápido."
+
+#: app/library.py:447 app/library.py:494
+msgid "This game has no download link yet. Paste the link first."
+msgstr "Este juego aún no tiene enlace de descarga. Primero pega el enlace."
+
+#: app/panel/cards.py:879
+msgid "Those keys cannot be a hotkey: add Ctrl, Alt or Win."
+msgstr "Esas teclas no pueden ser un atajo: agrega Ctrl, Alt o Win."
+
+#: app/panel/cards.py:84
+msgid "Translate"
+msgstr "Traducir"
+
+#: app/start_window.py:206
+msgid "Translate into"
+msgstr "Traducir al"
+
+#: app/panel/cards.py:271
+msgid "Translates text no database has, as it appears (only the text is sent, never pictures; PLaMo sends nothing at all)"
+msgstr "Traduce el texto que ninguna base de datos tiene, en cuanto aparece (solo se envía el texto, nunca imágenes; PLaMo no envía nada)"
+
+#: app/start_window.py:512
+msgid "Translation database (*.sqlite *.sqlite3 *.db);;All files (*)"
+msgstr "Base de datos de traducción (*.sqlite *.sqlite3 *.db);;Todos los archivos (*)"
+
+#: app/panel/cards.py:725
+msgid "Try the GPU again"
+msgstr "Probar la GPU de nuevo"
+
+#: app/panel/cards.py:134
+msgid "Types in"
+msgstr "Se escribe"
+
+#: translate/backends/claude.py:179
+msgid "Unexpected answer from the Claude API: {error}"
+msgstr "Respuesta inesperada de la API de Claude: {error}"
+
+#: app/panel/edge.py:63
+msgid "Unfold the panel"
+msgstr "Desplegar el panel"
+
+#: app/panel/window.py:243
+msgid "Unfold the panel ({keys})"
+msgstr "Desplegar el panel ({keys})"
+
+#: app/start_window.py:584
+msgid "Up to date."
+msgstr "Está al día."
+
+#: app/start_window.py:525 app/start_window.py:541
+msgid "Use a file"
+msgstr "Usar un archivo"
+
+#: app/start_window.py:232
+msgid "Use a file…"
+msgstr "Usar un archivo…"
+
+#: app/region_picker.py:55
+msgid "Use this area"
+msgstr "Usar esta área"
+
+#: app/start_window.py:414 app/start_window.py:60
+msgid "version {version}"
+msgstr "versión {version}"
+
+#: app/panel/controls.py:111
+msgid "Waiting for the game window"
+msgstr "Esperando la ventana del juego"
+
+#: app/panel/cards.py:147
+msgid "Where the speaker's name is (optional)"
+msgstr "Dónde está el nombre de quien habla (opcional)"
+
+#: app/dialogs.py:140 app/dialogs.py:192
+msgid "Window"
+msgstr "Ventana"
+
+#: app/panel/cards.py:173
+msgid "with a name area"
+msgstr "con área del nombre"
+
+#: app/panel/cards.py:822
+msgid "Write down lines no database has"
+msgstr "Anotar las líneas que no tiene ninguna base de datos"
+
+#: app/start_window.py:501
+msgid "You have the newest database already."
+msgstr "Ya tienes la base de datos más reciente."
+
+#: app/dialogs.py:195
+msgid "your character's name (optional)"
+msgstr "el nombre de tu personaje (opcional)"
+
+#: translate/backends/claude.py:40
+msgid "Your Claude API key was refused. Check that it was pasted completely and is still active at console.anthropic.com, or paste a new one into the settings."
+msgstr "Se rechazó tu clave de la API de Claude. Revisa que se haya pegado completa y que siga activa en console.anthropic.com, o pega una nueva en los ajustes."
+
+#: translate/backends/openai.py:39
+msgid "Your OpenAI API key was refused. Check that it was pasted completely and is still active at platform.openai.com, or paste a new one into the settings."
+msgstr "Tu clave de API de OpenAI fue rechazada. Revisa que la hayas pegado completa y que siga activa en platform.openai.com, o pega una nueva en la configuración."
+
+#: app/start_window.py:492
+msgid "{done:.1f} MB"
+msgstr "{done:.1f} MB"
+
+#: app/start_window.py:489
+msgid "{done:.1f} of {total:.1f} MB"
+msgstr "{done:.1f} de {total:.1f} MB"
+
+#: app/start_window.py:536
+msgid "{file} is in the folder."
+msgstr "{file} está en la carpeta."
+
+#: app/start_window.py:541
+msgid "{file} is not used: {why}\n\nIt was left where it is."
+msgstr "{file} no se usa: {why}\n\nSe dejó donde estaba."
+
+#: app/start_window.py:453
+msgid "{game} added."
+msgstr "{game} agregado."
+
+#: app/start_window.py:463
+msgid "{game} removed."
+msgstr "{game} quitado."
+
+#: app/panel/cards.py:882
+msgid "{keys} is one of the app's other hotkeys already."
+msgstr "{keys} ya es otro de los atajos de la app."
+
+#: app/start_window.py:411
+msgid "{language} · {done} of {total} lines"
+msgstr "{language} · {done} de {total} líneas"
+
+#: app/panel/cards.py:512
+msgid "{name} is installed."
+msgstr "{name} está instalado."
+
+#: app/panel/cards.py:557
+msgid "{n} failed"
+msgstr "{n} fallidas"
+
+#: app/start_window.py:69
+msgid "{n} line"
+msgid_plural "{n} lines"
+msgstr[0] "{n} línea"
+msgstr[1] "{n} líneas"
+
+#: app/start_window.py:56
+msgid "{n} line in {language}"
+msgid_plural "{n} lines in {language}"
+msgstr[0] "{n} línea en {language}"
+msgstr[1] "{n} líneas en {language}"
+
+#: app/panel/cards.py:555
+msgid "{n} lines translated live"
+msgstr "{n} líneas traducidas en vivo"
+
+#: app/start_window.py:408
+msgid "{n} live translation"
+msgid_plural "{n} live translations"
+msgstr[0] "{n} traducción en vivo"
+msgstr[1] "{n} traducciones en vivo"
+
+#: app/panel/cards.py:852
+msgid "{n} written down this session and before"
+msgstr "{n} anotadas en esta sesión y antes"
+
+#: translate/backends/claude.py:174 translate/backends/http.py:75
+msgid "{offline} No answer came within {seconds} s."
+msgstr "{offline} No llegó ninguna respuesta en {seconds} s."
+
+#: app/panel/window.py:363
+msgid "{what}: try again when it is done."
+msgstr "{what}: inténtalo de nuevo cuando termine."

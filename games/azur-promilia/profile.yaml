@@ -1,0 +1,141 @@
+# Azur Promilia (JP) game profile.
+# All coordinates are relative (0-1) to the game frame at 16:9. Regions were measured on
+# 1920x1080 CBT footage (July 2026). Re-measure after release if the UI changes.
+game: azur-promilia
+display_name: Azur Promilia (JP)
+# Where the official databases are published: a shared Google Drive folder, one file per
+# language and version (azur-promilia.<lang>.<version>.sqlite). A game added with this
+# preset downloads the newest in the player's language from it; players may paste any
+# other link.
+database_index: "https://drive.google.com/drive/folders/1kxJOPALzPs-75gMVhur73Qwe-cMIgiDE?usp=sharing"
+
+window:
+  # The JP release (Yostar, 1.0.1) is AzurPromiliaJP.exe, started by its launcher; Unity
+  # titles the window after the product, AzurPromiliaJP. The last beta was
+  # アズールプロミリア.exe. Title patterns are case-insensitive regular expressions. An
+  # emulator (BlueStacks) is found by the window the player picks, never by its program.
+  process_names: ["AzurPromiliaJP.exe", "アズールプロミリア.exe"]
+  title_patterns:
+    - 'Azur\s*Promilia'
+    - "アズールプロミリア"
+  # the picture is 16:9; in a window of another shape (full screen on a 21:9 monitor, an
+  # emulator) it sits between black bars, and the regions below are fractions of it
+  aspect: 1.7778
+
+ocr:
+  lang: japan
+  det_version: PP-OCRv4
+  det_model_type: mobile
+  rec_version: PP-OCRv4
+  rec_model_type: mobile
+  text_score: 0.5
+
+regions:
+  # Two dialogue layouts share the bottom of the screen, both centred, white text with a
+  # dark outline and no box:
+  #   in-world dialogue: speaker name at y 0.77-0.81, 1-2 text rows at y 0.83-0.91
+  #   cutscene subtitles: no name, 1-3 text rows at y 0.88-0.97
+  # One region covers the text of both; the combat HUD (enemy HP counter at y 0.92,
+  # key prompts at the bottom corners) overlaps it and is filtered by text shape.
+  # A third layout, NPC speech while walking: one row at y 0.76-0.80 with the name at
+  # y 0.69-0.73 (speaker_npc). The region covers all three bands.
+  dialogue:
+    x: 0.15
+    y: 0.745
+    w: 0.70
+    h: 0.23
+    screen_type: dialogue
+    multiline: true
+  speaker_npc:
+    x: 0.35
+    y: 0.685
+    w: 0.30
+    h: 0.05
+    screen_type: speaker_npc
+  speaker:
+    x: 0.35
+    y: 0.765
+    w: 0.30
+    h: 0.047
+    screen_type: speaker
+  # Layout hints for UI covers (read like any other area; no separate mechanism): how the
+  # game aligns text there, so an English label longer than its Japanese grows the right
+  # way and never over the key badge or icon beside it.
+  quest_title:
+    x: 0.026
+    y: 0.238
+    w: 0.114
+    h: 0.034
+    screen_type: layout
+    align: left
+    ticker: true
+    note: >-
+      the chapter title's slot in the quest tracker: "第一章! シャルル村..." rests there, then
+      the whole title scrolls through it; shown statically (read at rest), never per frame
+  quest_tracker:
+    x: 0.0
+    y: 0.22
+    w: 0.25
+    h: 0.11
+    screen_type: layout
+    align: left
+    note: chapter name + current objective, top-left during exploration
+  interact_prompt:
+    x: 0.50
+    y: 0.45
+    w: 0.32
+    h: 0.09
+    screen_type: layout
+    align: left
+    note: F interaction prompt (talk / go to), centre-right, label right of the key icon
+  key_hints:
+    x: 0.80
+    y: 0.62
+    w: 0.19
+    h: 0.12
+    screen_type: layout
+    align: right
+    note: context key hints bottom-right (call Kibo, Star Link), key badge right of the label
+
+# The game's dialogue layouts. The layout of a line is the one whose rows_top range holds
+# the top of its first row; its translation lies on frosted glass inside `glass`
+# (everywhere the layout's text can appear; measured on the whole CBT capture: centred rows,
+# 99 % within it, below the divider line under the speaker name), laid out once per line in
+# `panel`. `divider`: the line with a star under the speaker name; while its star is on
+# screen (match score >= `match`, or >= `again` for a conversation seen in the last
+# seconds) a conversation is open, before any text is read. `typing`: characters a second
+# a line types out (measured 22-28; the player may finish a line early); cutscene
+# subtitles appear whole.
+dialogue_layouts:
+  npc:  # NPC speech while walking: name above, one row (more barks stack below)
+    rows_top: [0.745, 0.800]
+    panel: [0.22, 0.750, 0.56, 0.052]
+    anchor: top
+    speaker: [0.35, 0.685, 0.30, 0.050]
+    glass: [0.265, 0.749, 0.470, 0.093]  # rows from 0.763, two at most; divider at 0.738
+    divider: {y: 0.7378, template: dividers/star.png, height: 900, match: 0.45, again: 0.28}
+    typing: 25
+  world:  # in-world dialogue: name above, one to three rows
+    rows_top: [0.800, 0.865]
+    panel: [0.25, 0.822, 0.50, 0.118]
+    anchor: top
+    speaker: [0.35, 0.765, 0.30, 0.047]
+    glass: [0.255, 0.826, 0.490, 0.120]  # rows from 0.840, three at most; divider at 0.814
+    divider: {y: 0.8133, template: dividers/star.png, height: 900, match: 0.45, again: 0.28}
+    typing: 25
+  cutscene:  # subtitles: no name, one to three rows at the bottom edge
+    rows_top: [0.865, 0.975]
+    panel: [0.20, 0.866, 0.60, 0.108]
+    anchor: bottom
+    glass: [0.255, 0.876, 0.490, 0.101]  # one or two rows ending at 0.965
+    typing: 0
+
+# Screen-level hints for the capture tool and HUD.
+screen:
+  reference_aspect: "16:9"
+  # Playback controls shown during cutscenes (x1.0 / AUTO / skip) live top-right.
+  cutscene_controls:
+    x: 0.83
+    y: 0.015
+    w: 0.16
+    h: 0.05

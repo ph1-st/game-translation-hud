@@ -1,0 +1,35 @@
+# local data: footage, downloaded models, generated databases (never commit)
+data/
+# game files kept beside a profile (installs, archives to extract text from)
+games/*/compressed/
+games/*/gamefiles/
+# a game's install zipped (the JP beta, 41 GB, dropped in the project root)
+/*.zip
+*.mp4
+*.webm
+*.mkv
+*.part
+*.ytdl
+*.sqlite
+*.sqlite-journal
+*.db
+
+# python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# debug output
+out/
+debug/
+
+# secrets
+.env
+
+# the GitHub repository for players (its own git): README, pictures, licence
+publish/

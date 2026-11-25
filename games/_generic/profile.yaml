@@ -1,0 +1,19 @@
+# Generic profile: any game with Japanese text. No dialogue layouts: every text on screen
+# is covered alike (the app's "Natural" cover style). The app fills in the game window
+# (title or program name) from what the player picks.
+game: _generic
+display_name: Any other game (no preset)
+
+window:
+  process_names: []
+  title_patterns: []
+
+ocr:
+  lang: japan
+  det_version: PP-OCRv4
+  det_model_type: mobile
+  rec_version: PP-OCRv4
+  rec_model_type: mobile
+  text_score: 0.5
+
+regions: {}
