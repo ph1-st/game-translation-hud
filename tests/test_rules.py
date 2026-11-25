@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import dataclasses
+
 import cv2
 import numpy as np
 
@@ -174,6 +176,21 @@ def test_a_line_that_wraps_is_matched_across_its_rows():
     unrelated = popup_row(f, "設定を保存しました", x, 426)
     rows, other = maker.rows(f, [first, unrelated])
     assert [r.line for r in rows] == [first] and other == [unrelated]
+
+
+def test_light_dialogue_text_read_as_dark_is_drawn_light():
+    from capture.profile import load_profile
+    from hud.dialogue.component import layout_colours
+    from hud.looks import PLAIN_LIGHT, is_light
+
+    lays = load_profile("azur-promilia").dialogue_layouts
+    npc = lays["npc"]  # white outlined text: over bright sand its outline was measured
+    assert npc.light_text
+    assert layout_colours(npc, (28, 17, 14), None) == (PLAIN_LIGHT, (28, 17, 14))
+    fill, edge = layout_colours(npc, (255, 252, 241), (54, 42, 29))  # measured right
+    assert fill == (255, 252, 241) and edge == (54, 42, 29) and is_light(fill)
+    other = dataclasses.replace(npc, light_text=False)  # a game whose dialogue is dark
+    assert layout_colours(other, (28, 17, 14), None) == ((28, 17, 14), None)
 
 
 def test_a_paragraph_wraps_into_its_rows_and_gets_wider_not_taller():

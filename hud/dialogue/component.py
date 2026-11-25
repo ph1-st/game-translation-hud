@@ -37,7 +37,7 @@ from hud.extent import PAD
 from hud.ink import Rect
 from hud.items import OverlayItem, reveal_share
 from hud.layout import fit_line, intersects
-from hud.looks import PLAIN_LIGHT
+from hud.looks import PLAIN_LIGHT, Color, is_light
 from hud.style import CoverStyle
 from hud.textwidth import font_px_for_glyph
 
@@ -57,6 +57,17 @@ SPEAKER_MARGIN = 0.01  # around a speaker band when it is read on its own
 PANE_IN_S = 0.15  # a pane of frosted glass fades in this long...
 PANE_OUT_S = 0.25  # ...and out once its scene is over
 DEFAULT_GLYPH = 0.02  # a layout's glyph height (of the frame) before one is measured
+
+
+def layout_colours(
+    lay: DialogueLayout, fill: Color, edge: Color | None
+) -> tuple[Color, Color | None]:
+    """The colours a layout's translation is drawn in: those measured on its first line,
+    except that a layout whose text is light (``light_text``) never gets dark text: read
+    over a bright scene, the outline of its light text was taken for the text."""
+    if lay.light_text and not is_light(fill):
+        return PLAIN_LIGHT, fill
+    return fill, edge
 
 
 class DialogueComponent:
@@ -375,8 +386,10 @@ class DialogueComponent:
     def _scene(self, lay: DialogueLayout, rec: dict, fw: int, fh: int) -> Scene:
         sc = Scene(lay, px(lay.panel, fw, fh), max(6, int(round(rec["font"] * fh))),
                    rec["glyph"] * fh)  # fmt: skip
-        sc.fill = tuple(rec.get("fill") or PLAIN_LIGHT)
-        sc.edge = tuple(rec["edge"]) if rec.get("edge") is not None else None
+        sc.fill, sc.edge = layout_colours(
+            lay, tuple(rec.get("fill") or PLAIN_LIGHT),
+            tuple(rec["edge"]) if rec.get("edge") is not None else None,
+        )  # fmt: skip
         sc.text_y = rec["text_y"] * fh
         sc.row_pitch = rec.get("pitch", 0.0) * fh
         sc.align = lay.align if lay.align != "auto" else str(rec.get("align") or "center")

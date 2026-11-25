@@ -115,6 +115,7 @@ dialogue_layouts:
     glass: [0.265, 0.749, 0.470, 0.093]  # rows from 0.763, two at most; divider at 0.738
     divider: {y: 0.7378, template: dividers/star.png, height: 900, match: 0.45, again: 0.28}
     typing: 25
+    light_text: true  # white, outlined: over bright ground the outline is what stands out
   world:  # in-world dialogue: name above, one to three rows
     rows_top: [0.800, 0.865]
     panel: [0.25, 0.822, 0.50, 0.118]
@@ -123,12 +124,14 @@ dialogue_layouts:
     glass: [0.255, 0.826, 0.490, 0.120]  # rows from 0.840, three at most; divider at 0.814
     divider: {y: 0.8133, template: dividers/star.png, height: 900, match: 0.45, again: 0.28}
     typing: 25
+    light_text: true
   cutscene:  # subtitles: no name, one to three rows at the bottom edge
     rows_top: [0.865, 0.975]
     panel: [0.20, 0.866, 0.60, 0.108]
     anchor: bottom
     glass: [0.255, 0.876, 0.490, 0.101]  # one or two rows ending at 0.965
     typing: 0
+    light_text: true
 
 # Screen-level hints for the capture tool and HUD.
 screen:

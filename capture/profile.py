@@ -136,6 +136,8 @@ class DialogueLayout:
     align: str = "center"  # center | left | auto: how the game lays its rows out (auto:
     # found from the first line), the translation and the glass follow
     reveal: bool = True  # the translation types in like the game's text (else at once)
+    light_text: bool = False  # the game's text here is light (outlined): a dark colour read
+    # for it is its outline, taken for the text over a bright scene
 
     @classmethod
     def from_dict(cls, name: str, d: dict[str, Any]) -> "DialogueLayout":
@@ -173,6 +175,7 @@ class DialogueLayout:
             all_dialogue=bool(d.get("all_dialogue", False)),
             align=str(d.get("align", "center")),
             reveal=bool(d.get("reveal", True)),
+            light_text=bool(d.get("light_text", False)),
         )
 
 
