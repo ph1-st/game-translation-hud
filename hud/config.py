@@ -37,6 +37,8 @@ class HudConfig:
     confirmation_mode: str = "balanced"
     cover_style: str = DEFAULT_STYLE
     cover_mode: str = "grow"
+    text_scale: float = 1.0  # the translation's size (1: the game's own; 0.8: smaller)
+    plain_text: bool = False  # white with a black outline, not the Japanese's colours
     title: str | None = None  # a window title regex instead of the profile's
     capture: str = "auto"  # capture backend (Windows: auto | dxcam | mss)
     interval_ms: int = 50  # capture and pixel watch period

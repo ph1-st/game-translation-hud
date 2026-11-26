@@ -1,8 +1,8 @@
 """Live translation of text the database does not know.
 
 * :mod:`translate.languages`: every language the app offers, and how its text is laid out
-* :mod:`translate.backends`: PLaMo 3 Translate on this computer, Claude (Anthropic API) and
-  ChatGPT (OpenAI API)
+* :mod:`translate.backends`: PLaMo 3 Translate on this computer, Claude (Anthropic API),
+  ChatGPT (OpenAI API), DeepL, and any model behind an OpenAI-compatible server
 * :mod:`translate.local`: installing and running the local model (llama.cpp's server)
 * :mod:`translate.prompts`: what the models are told, and how their answers are read
 * :mod:`translate.memory`: per-game context (glossary, recent dialogue), persisted as JSON
@@ -14,10 +14,13 @@ from translate.backends import (
     DEFAULT_BATCH_MODEL,
     DEFAULT_LIVE_MODEL,
     DEFAULT_OPENAI_MODEL,
+    SERVERS,
     Backend,
     BadAnswerError,
     ClaudeBackend,
+    CompatibleBackend,
     Context,
+    DeepLBackend,
     Item,
     OpenAIBackend,
     PlamoBackend,
@@ -34,10 +37,13 @@ __all__ = [
     "DEFAULT_BATCH_MODEL",
     "DEFAULT_LIVE_MODEL",
     "DEFAULT_OPENAI_MODEL",
+    "SERVERS",
     "BadAnswerError",
     "Backend",
     "ClaudeBackend",
+    "CompatibleBackend",
     "Context",
+    "DeepLBackend",
     "GameMemory",
     "Item",
     "LiveTranslator",

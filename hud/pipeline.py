@@ -49,7 +49,7 @@ import threading
 import time
 from collections import OrderedDict, deque
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 import numpy as np
 
@@ -175,12 +175,16 @@ class HudCore:
         cover_mode: str = "grow",
         confirmation_mode: str = BALANCED,
         target_lang: str = "en",
+        text_scale: float = 1.0,
+        plain_text: bool = False,
     ) -> None:
         """*cover_mode*: ``grow`` (dialogue on frosted glass that grows with the text),
         ``fixed`` (one pane over a dialogue layout's whole glass area) or ``natural`` (no
         dialogue handling: every text covered alike). *confirmation_mode*: ``balanced`` or
         ``instant`` (:class:`hud.dialogue.DialogueComponent`). *target_lang*: the
-        translation's language (how its lines break, which way it is written)."""
+        translation's language (how its lines break, which way it is written). *text_scale*:
+        the player's text size (1: the game's own); *plain_text*: every translation white
+        with a black outline instead of the Japanese's colours."""
         if cover_mode not in COVER_MODES:
             raise ValueError(f"unknown cover mode {cover_mode!r} ({', '.join(COVER_MODES)})")
         if cover_mode == NATURAL:
@@ -194,6 +198,8 @@ class HudCore:
         self.engine = engine
         self.cache = cache
         self.maker = CoverMaker(lookup, cache, profile, spaced)
+        self.maker.text_scale = text_scale
+        self.plain_text = plain_text
         second = getattr(engine, "second", None)  # (MeikiOCR's: capture/cuda_helper.py)
         if second is not None:
             self.maker.reread = Rereader(second)
@@ -694,12 +700,16 @@ class HudCore:
             self.recall.bring_back(frame, now, self.boards, keep_out)
 
     def items(self) -> list[OverlayItem]:
-        return (
+        out = (
             self.ui_board.items()
             + self.dialogue.board.items()
             + self.dialogue.items()
             + self.ticker.items(*self._size)
         )
+        if self.plain_text:
+            out = [replace(it, plain=True) if it.style in ("label", "text") else it
+                   for it in out]
+        return out
 
     def version(self) -> tuple[int, int, int, int]:
         return (

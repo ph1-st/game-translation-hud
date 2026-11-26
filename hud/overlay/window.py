@@ -290,6 +290,11 @@ class OverlayWindow(QWidget):
             self._refresh(ident, anim, frame)
         self._collect()
 
+    @property
+    def newest_frame(self) -> np.ndarray | None:
+        """The newest captured frame (any thread: the stream source's)."""
+        return self._frame
+
     def has_glass(self) -> bool:
         return any(a.item.frost is not None for a in self._anims.values())
 

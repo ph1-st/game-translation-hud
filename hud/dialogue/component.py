@@ -351,7 +351,7 @@ class DialogueComponent:
             fill, edge = self.cache.palette.snap(read.fill, read.edge)
             rec = self.cache.set_dialogue_font(lay.name, {
                 "glyph": look / fh,
-                "font": font_px_for_glyph(look) / fh,
+                "font": font_px_for_glyph(look, self.maker.text_scale) / fh,
                 "fill": list(fill),
                 "edge": list(edge) if edge is not None else None,
             })  # fmt: skip

@@ -159,6 +159,7 @@ def test_settings_survive_hand_edits_and_damage(tmp_path):
                     "junk",
                 ],
                 "live": [1, 2],
+                "text_size": 95,  # not one of the sizes: the game's own
             }
         ),
         encoding="utf-8",
@@ -166,7 +167,7 @@ def test_settings_survive_hand_edits_and_damage(tmp_path):
     s = Settings.load(p)
     assert s.log_misses is True and s.ui_language == "es"
     assert [(g.id, g.name) for g in s.games] == [("ok-game", "OK"), ("no-name", "no-name")]
-    assert s.live.enabled is False
+    assert s.live.enabled is False and s.text_size == 100 and not s.white_text
     p.write_text("{not json", encoding="utf-8")
     assert Settings.load(p).games == []
     assert not p.exists() and list(tmp_path.glob("settings.*.bad.json"))  # kept aside

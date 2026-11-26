@@ -22,6 +22,12 @@ window:
   # emulator) it sits between black bars, and the regions below are fractions of it
   aspect: 1.7778
 
+# The game's text names a key by its input action ("MainInput/MainEvade", "UI/Submit",
+# "GamepadUI/Common_RStickMove") and shows the key's icon there. The database lines keep
+# the action's path: readings find them without it, and the English names the action
+# ("Press [Evade] while moving to dodge").
+key_prompts: '(?:MainInput|GamepadUI|UI|RealTime[A-Za-z]+|Page[A-Za-z]+|KiBo[A-Za-z]+|[A-Za-z]+Input)/(?P<action>[A-Z][A-Za-z_]*)(?:\{n\}|[0-9]+)?'
+
 ocr:
   lang: japan
   det_version: PP-OCRv4

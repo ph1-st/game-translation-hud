@@ -87,7 +87,10 @@ program) is **never used**: the start window lists it with a ⚠.
 
 - **Start / Stop** the overlay; **Hide translations** for a look at the original.
 - **Translate:** **Dialogue** (dialogue, subtitles, narration, choices) and **Menus**
-  (everything else). Only want the story? Untick Menus.
+  (everything else). Only want the story? Untick Menus. **Text size** makes every
+  translation smaller or larger than the game's own text (smaller text is squeezed less
+  when the English is long), and **White text** draws it all white with a black outline
+  instead of in the game's colours.
 - **Dialogue:** **Dialogue on frosted glass** in the game's dialogue area (off: covered
   where it is, like other text). The glass **grows with the text** or is **one window**;
   it can **stay on screen**; the translation **types in** with the game's text or appears
@@ -98,6 +101,7 @@ program) is **never used**: the start window lists it with a ⚠.
   ([below](#the-text-reader)).
 - **Diagnostics** appears once the game window is found: whether the text reader runs on
   the graphics card, reading times, remembered menus, and a report to copy.
+- **Streaming (OBS):** the translations for your stream ([below](#streaming)).
 - **More:** the panel's side, its handle, the hotkeys, the reading mode (Balanced is best
   for most games), and the list of lines no database had.
 
@@ -131,9 +135,37 @@ on screen is. Under **Live translation** choose:
 - **Claude** or **ChatGPT** with your own API key: paste it, press **Save**, then **Test**,
   and choose the model (ChatGPT lists those your key can use after a test). You pay
   Anthropic or OpenAI for what you use.
+- **DeepL** with your own API key (the free plan translates 500,000 characters a month).
+  The game's names are kept as the database has them, and the last lines of the
+  conversation are sent along as context.
+- **Another model**: any model behind a server that speaks OpenAI's API. That can be one
+  you run yourself (Ollama, LM Studio, llama.cpp, KoboldCpp) or a service (OpenRouter,
+  Google Gemini, DeepSeek, Groq, Mistral…). Nothing is installed for it. Type the
+  server's address, or pick one under **Servers**, add a key if the server asks for one,
+  and press **Test**: it lists the server's models. Choose one, or type its name. It gets
+  the same instructions, names and conversation as Claude and ChatGPT. Small models
+  translate worse, and a server on your own computer shares the graphics card with the
+  game.
 
 Live lines show slightly faded and are kept (per language), so next time they appear at
 once. Only text is sent, never pictures, and PLaMo sends nothing at all.
+
+## Streaming
+
+The overlay is kept out of every screen capture, so the HUD never reads its own
+translations. That also keeps it out of OBS. To show the translations on stream, open
+**Streaming (OBS)** and tick **Show the translations to OBS**. The app then serves a page
+on this computer only (`http://127.0.0.1:47811/`) with the translations on a clear
+background. In OBS:
+
+1. Capture the game as usual, with **Game Capture** or **Window Capture**.
+2. Add a **Browser** source with the address shown (**Copy** puts it on the clipboard).
+   Set its width and height to the size of the game's picture: the panel shows it once the
+   overlay runs (for example 1920 × 1080).
+3. Put the Browser source above the game capture, at the same place and size.
+
+The game keeps OBS's full frame rate, and the translations sit where you see them.
+Nothing leaves your computer. On Linux, OBS's screen capture shows the overlay already.
 
 ## The text reader
 

@@ -1,5 +1,6 @@
-"""Translation backends for live translation: PLaMo 3 Translate on this computer, and the
-player's own key for Claude (Anthropic API) or ChatGPT (OpenAI API).
+"""Translation backends for live translation: PLaMo 3 Translate on this computer, the
+player's own key for Claude (Anthropic API), ChatGPT (OpenAI API) or DeepL, and any model
+behind an OpenAI-compatible server the player names (:mod:`translate.backends.compatible`).
 
 Claude and ChatGPT get the requests built by :mod:`translate.prompts` and their answers
 are read with :func:`~translate.prompts.parse_translations`; an unusable answer (not JSON,
@@ -18,6 +19,8 @@ from translate.backends.claude import (
     ClaudeBackend,
     claude_model_name,
 )
+from translate.backends.compatible import SERVERS, CompatibleBackend
+from translate.backends.deepl import DeepLBackend
 from translate.backends.llm import ask_twice
 from translate.backends.openai import DEFAULT_OPENAI_MODEL, OpenAIBackend
 from translate.backends.plamo import PlamoBackend
@@ -29,10 +32,13 @@ __all__ = [
     "DEFAULT_BATCH_MODEL",
     "DEFAULT_LIVE_MODEL",
     "DEFAULT_OPENAI_MODEL",
+    "SERVERS",
     "BadAnswerError",
     "Backend",
     "ClaudeBackend",
+    "CompatibleBackend",
     "Context",
+    "DeepLBackend",
     "Item",
     "OpenAIBackend",
     "PlamoBackend",

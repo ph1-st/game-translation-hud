@@ -42,6 +42,6 @@ def _edition() -> str:
 
 EDITION = _edition()
 APP_NAME, APP_ID, ONE_GAME = EDITIONS[EDITION]
-VERSION = "1.1.2"
+VERSION = "1.2.0"
 # the guide, for both apps (the panel shows no long texts: its Help opens this)
 HELP_URL = "https://github.com/ph1-st/game-translation-hud#readme"

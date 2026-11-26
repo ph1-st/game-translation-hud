@@ -47,6 +47,9 @@ class OverlayItem:
     rtl: bool = False  # written right to left (Arabic, Hebrew)
     id: str = ""
     provisional: bool = False  # translated live: shown a little faded
+    plain: bool = False  # the text drawn white with a black outline, whatever the colours
+    # of the Japanese (fg and edge still say what the Japanese looks like: it is erased by
+    # them)
 
     def identity(self) -> str:
         return self.id or f"{self.style}|{'/'.join(self.lines)}|{self.rect}"

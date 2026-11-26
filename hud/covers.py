@@ -116,6 +116,7 @@ class CoverMaker:
         self.cache = cache
         self.profile = profile
         self.spaced = spaced
+        self.text_scale = 1.0  # the player's text size (1: the game's own size, 0.8 smaller)
         self.unsettled = 0  # readings dropped: their text moved while they were read
         # (text, kind, speaker, confidence, box) of readings with no database line
         self.unmatched: Callable[[str, str, str | None, float, Rect], None] | None = None
@@ -304,7 +305,7 @@ class CoverMaker:
         fh, fw = frame.shape[:2]
         rs = [rows[i] for i in blk]
         look = looks[blk[0]]
-        font_px = font_px_for_glyph(look)
+        font_px = font_px_for_glyph(look, self.text_scale)
         hits = _distinct_hits(rs)
         template = " ".join(h.template for h in hits)
         text = " ".join(h.translation for h in hits)

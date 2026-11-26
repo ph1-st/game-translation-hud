@@ -21,9 +21,17 @@ Only for these, each started by you:
 | Installing PLaMo for live translation (one button) | Hugging Face (the model, Preferred Networks' page) and GitHub (llama.cpp's server) | Ordinary download requests, once |
 | Installing MeikiOCR, the faster reader on NVIDIA cards (one button) | PyPI (ONNX Runtime's CUDA build, NVIDIA's libraries) and Hugging Face (the models) | Ordinary download requests, once |
 | Live translation with Claude or ChatGPT, if you choose one | Anthropic or OpenAI | The text of the lines no database has, a few recent lines of the conversation as context, and the game's names and terms (OpenAI is asked not to store it) |
+| Live translation with DeepL, if you choose it | DeepL | The text of the lines no database has (with the game's names already in English) and a few recent lines of the conversation as context |
+| Live translation with another model, if you choose one | The server whose address you typed (your own computer, or the service you chose) | The same as for Claude or ChatGPT |
 | Testing an API key | That service | A short test request |
 
 Live translation with **PLaMo** runs on your own computer: nothing is sent anywhere. Its server listens on 127.0.0.1 only and ends with the app.
+
+**Streaming (OBS)**, when you switch it on, serves the overlay as a page on 127.0.0.1 only
+(port 47811, or the next free one), for OBS on the same computer. It holds what the
+overlay draws (the translations and the bits of the game's picture they paint over the
+Japanese with) and answers no request from another computer. It stops when you switch it
+off or close the app.
 
 Your API keys are kept in your system's credential store (Windows Credential Manager, or
 the Secret Service keyring on Linux). Without one, a key is kept in a file in the app's

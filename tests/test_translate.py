@@ -513,6 +513,160 @@ def test_chatgpt_lists_the_text_models_newest_first(openai_api):
         "gpt-new-mini", "o4-mini", "gpt-old"]
 
 
+# ---- another model, behind an OpenAI-compatible server -------------------------------------
+class CompatibleHandler(JsonHandler):
+    """Chat Completions and the model list, as Ollama, LM Studio or OpenRouter serve them."""
+
+    def do_GET(self) -> None:
+        self.server.requests.append((self.path, dict(self.headers), None))
+        self.send_json(200, {"object": "list", "data": [
+            {"id": "qwen3:8b"}, {"id": "gemma3:12b"}, {"id": "models/gemini-2.5-flash"}]})
+
+    def do_POST(self) -> None:
+        self.server.requests.append((self.path, dict(self.headers), self.read_json()))
+        status, body = self.server.replies.pop(0)
+        self.send_json(status, body)
+
+
+def chat_json(text: str, finish: str = "stop") -> dict:
+    return {"choices": [{"index": 0, "finish_reason": finish,
+                         "message": {"role": "assistant", "content": text}}],
+            "usage": {"prompt_tokens": 200, "completion_tokens": 20}}
+
+
+@pytest.fixture
+def chat_api():
+    with local_server(CompatibleHandler) as server:
+        server.replies = []
+        server.url = f"http://127.0.0.1:{server.server_address[1]}/v1"
+        yield server
+
+
+def test_another_model_gets_the_prompt_and_its_thinking_is_left_out(chat_api):
+    from translate import CompatibleBackend
+
+    backend = CompatibleBackend(chat_api.url + "/chat/completions/", "qwen3:8b")
+    chat_api.replies = [(200, chat_json(
+        '<think>テララ is a name.</think>\n{"translations": ["Settings", "Terara"]}'))]
+    items = [Item("設定"), Item("テララ", "dialogue", "テララ")]
+    assert backend.translate(items, Context(glossary=GLOSSARY)) == ["Settings", "Terara"]
+    path, headers, body = chat_api.requests[0]
+    assert path == "/v1/chat/completions" and "Authorization" not in headers  # (no key)
+    assert body["model"] == "qwen3:8b" and body["response_format"]["type"] == "json_schema"
+    system, user = body["messages"]
+    assert "テララ = Terara" in system["content"] and "1. [ui] 設定" in user["content"]
+    assert (backend.input_tokens, backend.output_tokens) == (200, 20)
+    assert backend.models() == ["gemini-2.5-flash", "gemma3:12b", "qwen3:8b"]
+
+
+def test_another_model_is_asked_in_the_answer_format_its_server_takes(chat_api):
+    from translate import CompatibleBackend
+
+    backend = CompatibleBackend(chat_api.url, "deepseek-chat", "sk-key")
+    chat_api.replies = [
+        (400, {"error": {"message": "response_format json_schema is unavailable"}}),
+        (422, {"error": "unknown field response_format"}),
+        (200, chat_json('```json\n{"translations": ["Yes"]}\n```')),
+        (200, chat_json('{"translations": ["No"]}')),
+    ]
+    assert backend.translate([Item("はい")], Context()) == ["Yes"]
+    kinds = [(r[2].get("response_format") or {}).get("type") for r in chat_api.requests]
+    assert kinds == ["json_schema", "json_object", None]
+    assert chat_api.requests[0][1]["Authorization"] == "Bearer sk-key"
+    assert backend.translate([Item("いいえ")], Context()) == ["No"]
+    assert "response_format" not in chat_api.requests[3][2]  # (remembered)
+
+
+def test_another_models_errors_say_what_to_fix(chat_api):
+    from translate import CompatibleBackend
+
+    for status, expected, stop in [
+        (401, "asks for an API key", True),
+        (404, "has no model qwen", True),
+        (400, "refused the request: Bad input", False),
+    ]:
+        backend = CompatibleBackend(chat_api.url, "qwen")
+        backend.format_level = 2  # (a 400 is not about the format here)
+        chat_api.replies = [(status, {"error": {"message": "Bad input"}})]
+        with pytest.raises(TranslationError, match=expected) as info:
+            backend.translate([Item("はい")], Context())
+        assert isinstance(info.value, StopError) == stop
+    with pytest.raises(StopError, match="name of the model"):
+        CompatibleBackend(chat_api.url, "").translate([Item("はい")], Context())
+    with pytest.raises(StopError, match="address of the model's server"):
+        CompatibleBackend("localhost:11434", "qwen").translate([Item("はい")], Context())
+    dead = CompatibleBackend("http://127.0.0.1:9/v1", "qwen")  # nothing listens there
+    dead.connect_timeout = 1.0
+    with pytest.raises(TranslationError, match="that it is running"):
+        dead.translate([Item("はい")], Context())
+
+
+# ---- DeepL -------------------------------------------------------------------------------------
+class DeepLHandler(JsonHandler):
+    def do_GET(self) -> None:
+        self.server.requests.append((self.path, dict(self.headers), None))
+        self.send_json(200, [
+            {"lang": "EN-US", "usable_as_target": True},
+            {"lang": "EN-GB", "usable_as_target": True},
+            {"lang": "ES", "usable_as_target": True},
+            {"lang": "JA", "usable_as_source": True, "usable_as_target": True},
+        ])
+
+    def do_POST(self) -> None:
+        body = self.read_json()
+        self.server.requests.append((self.path, dict(self.headers), body))
+        status, reply = self.server.replies.pop(0) if self.server.replies else (200, None)
+        if reply is None:  # an echo: what DeepL keeps as it is, the rest "translated"
+            reply = {"translations": [{"text": t.replace("いる", "is here")}
+                                      for t in body["text"]]}
+        self.send_json(status, reply)
+
+
+@pytest.fixture
+def deepl_api():
+    with local_server(DeepLHandler) as server:
+        server.replies = []
+        server.url = f"http://127.0.0.1:{server.server_address[1]}"
+        yield server
+
+
+def test_deepl_keeps_names_and_placeholders_and_gets_the_conversation(deepl_api):
+    from translate import DeepLBackend
+
+    backend = DeepLBackend("key:fx", url=deepl_api.url)
+    ctx = Context(glossary=GLOSSARY, recent=[("テララ", "行こう！", "Let's go!")])
+    got = backend.translate([Item("テララと{player}がいる <3 & {n}", "dialogue")], ctx)
+    assert got == ["Teraraと{player}がis here <3 & {n}"]
+    path, headers, body = deepl_api.requests[-1]
+    assert path == "/v2/translate" and headers["Authorization"] == "DeepL-Auth-Key key:fx"
+    assert body["text"] == ["<x>Terara</x>と<x>{player}</x>がいる &lt;3 &amp; <x>{n}</x>"]
+    assert body["tag_handling"] == "xml" and body["ignore_tags"] == ["x"]
+    assert body["source_lang"] == "JA" and body["target_lang"] == "EN-US"
+    assert body["context"] == "行こう！"
+    assert backend.characters == len(body["text"][0])
+    assert backend.target_code("es-419") == "ES"  # (no Latin American variant: Spanish)
+    with pytest.raises(StopError, match="does not translate into Thai"):
+        backend.target_code("th")
+
+
+def test_deepl_errors_say_what_to_fix(deepl_api):
+    from translate import DeepLBackend
+    from translate.backends.deepl import FREE_API, PRO_API, api_for
+
+    assert api_for("abc:fx") == FREE_API and api_for("abc") == PRO_API
+    backend = DeepLBackend("key", url=deepl_api.url)
+    backend.retry_delays = (0.0, 0.0)
+    for status, expected in [(403, "key was refused"), (456, "quota is used up")]:
+        deepl_api.replies = [(status, {"message": "nope"})]
+        with pytest.raises(StopError, match=expected):
+            backend.translate([Item("はい")], Context())
+    deepl_api.replies = [(429, {"message": "slow down"})] * 3
+    with pytest.raises(TranslationError, match="busy"):
+        backend.translate([Item("はい")], Context())
+    with pytest.raises(StopError, match="No DeepL API key"):
+        DeepLBackend("", url=deepl_api.url).translate([Item("はい")], Context())
+
+
 # ---- PLaMo (the local model) -----------------------------------------------------------------
 class LlamaHandler(JsonHandler):
     """The parts of llama.cpp's server the PLaMo backend uses: /tokenize, /completion."""

@@ -279,3 +279,35 @@ def test_the_scene_stays_while_the_next_line_comes_in(run):
     assert d.scene is not None  # the panel stays and paints it over (no flash of Japanese)
     d.watch(empty, 3.0)  # the band stays empty: the scene is over
     assert d.scene is None
+
+
+def test_the_players_text_size_scales_every_translation(profile, lookup, glossary):
+    from hud.covercache import CoverCache
+    from hud.pipeline import HudCore
+    from hud.style import get_style
+    from tools.replay import RecordedEngine, load_fixture
+
+    frame, meta = load_fixture("azur-promilia", "004720_list")
+    sizes = {}
+    for scale in (1.0, 0.8, 1.3):
+        core = HudCore(profile, lookup, glossary, CoverCache(None), RecordedEngine(meta["ocr"]),
+                       get_style("glow"), text_scale=scale)  # fmt: skip
+        core.tick(frame, lambda: frame, 0.0)
+        sizes[scale] = by_text(core, "Details 1").font_px
+    assert sizes[0.8] < sizes[1.0] < sizes[1.3]
+    assert abs(sizes[0.8] - 0.8 * sizes[1.0]) <= 1.0
+
+
+def test_white_text_keeps_the_japanese_colours_for_painting_it_over(profile, lookup, glossary):
+    from hud.covercache import CoverCache
+    from hud.pipeline import HudCore
+    from hud.style import get_style
+    from tools.replay import RecordedEngine, load_fixture
+
+    frame, meta = load_fixture("azur-promilia", "004720_list")
+    core = HudCore(profile, lookup, glossary, CoverCache(None), RecordedEngine(meta["ocr"]),
+                   get_style("glow"), plain_text=True)  # fmt: skip
+    core.tick(frame, lambda: frame, 0.0)
+    labels = fills(core)
+    assert labels and all(it.plain for it in labels)
+    assert all(it.fg is not None for it in labels)  # (what the Japanese is erased by)

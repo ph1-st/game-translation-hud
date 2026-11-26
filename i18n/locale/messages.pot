@@ -3,12 +3,16 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
-#: app/panel/window.py:356
+#: app/panel/window.py:357
 msgid "A database is being downloaded"
 msgstr ""
 
 #: app/start_window.py:576
 msgid "A newer {language} database is available."
+msgstr ""
+
+#: app/panel/cards.py:903
+msgid "A page on this computer only, with the translations on a clear background, for a Browser source above the game"
 msgstr ""
 
 #: app/dbfolder.py:105
@@ -19,7 +23,7 @@ msgstr ""
 msgid "A {language} database is available."
 msgstr ""
 
-#: app/panel/cards.py:497
+#: app/panel/cards.py:587
 msgid "Accept and install"
 msgstr ""
 
@@ -35,11 +39,23 @@ msgstr ""
 msgid "Add game"
 msgstr ""
 
-#: app/session.py:228
+#: app/panel/cards.py:945
+msgid "Address copied."
+msgstr ""
+
+#: app/panel/cards.py:341
+msgid "An OpenAI-compatible server: one on this computer (Ollama, LM Studio, llama.cpp…) or a service (OpenRouter, Gemini…)"
+msgstr ""
+
+#: app/panel/cards.py:47
+msgid "Another model (a server you name)"
+msgstr ""
+
+#: app/session.py:263
 msgid "Another program has the hotkey {keys}: choose others under More."
 msgstr ""
 
-#: app/panel/cards.py:894
+#: app/panel/cards.py:1048
 msgid "Another program has {keys}: choose other keys."
 msgstr ""
 
@@ -47,15 +63,19 @@ msgstr ""
 msgid "Any other game (no preset)"
 msgstr ""
 
-#: app/panel/cards.py:439
+#: app/panel/cards.py:524
 msgid "API key"
 msgstr ""
 
-#: app/panel/cards.py:176
+#: app/panel/cards.py:53
+msgid "API key, if the server asks for one"
+msgstr ""
+
+#: app/panel/cards.py:213
 msgid "Area: the preset's"
 msgstr ""
 
-#: app/panel/cards.py:173
+#: app/panel/cards.py:210
 msgid "Area: yours"
 msgstr ""
 
@@ -67,11 +87,11 @@ msgstr ""
 msgid "Asking the link…"
 msgstr ""
 
-#: app/panel/cards.py:149
+#: app/panel/cards.py:186
 msgid "Back to the preset's own areas"
 msgstr ""
 
-#: app/panel/cards.py:51
+#: app/panel/cards.py:59
 msgid "Balanced (recommended)"
 msgstr ""
 
@@ -79,7 +99,7 @@ msgstr ""
 msgid "Best, for a graphics card with 8 GB or more"
 msgstr ""
 
-#: app/panel/cards.py:295
+#: app/panel/cards.py:333
 msgid "Built with PLaMo · {license}"
 msgstr ""
 
@@ -87,7 +107,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: app/panel/cards.py:42
+#: app/panel/cards.py:45
 msgid "ChatGPT (your API key)"
 msgstr ""
 
@@ -99,7 +119,7 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: app/panel/cards.py:275
+#: app/panel/cards.py:313
 msgid "Check that the engine works"
 msgstr ""
 
@@ -119,19 +139,23 @@ msgstr ""
 msgid "Choose a database file"
 msgstr ""
 
-#: app/panel/window.py:433
+#: app/panel/window.py:436
 msgid "Choose a game first (◀ Games)."
+msgstr ""
+
+#: app/panel/cards.py:558
+msgid "Choose one of the server's models."
 msgstr ""
 
 #: app/dialogs.py:76
 msgid "Choose the game window"
 msgstr ""
 
-#: app/panel/window.py:470
+#: app/panel/window.py:473
 msgid "Choose the game window, and the overlay starts."
 msgstr ""
 
-#: app/panel/controls.py:71
+#: app/panel/controls.py:72
 msgid "Choose window…"
 msgstr ""
 
@@ -139,11 +163,11 @@ msgstr ""
 msgid "Choose…"
 msgstr ""
 
-#: app/panel/cards.py:41
+#: app/panel/cards.py:44
 msgid "Claude (your API key)"
 msgstr ""
 
-#: app/panel/cards.py:45
+#: app/panel/cards.py:50
 msgid "Claude API key (sk-ant-…)"
 msgstr ""
 
@@ -163,15 +187,15 @@ msgstr ""
 msgid "Claude Sonnet 5.5 — better quality, costs more"
 msgstr ""
 
-#: app/panel/edge.py:66 app/panel/window.py:501
+#: app/panel/edge.py:66 app/panel/window.py:504
 msgid "Close the app"
 msgstr ""
 
-#: app/panel/window.py:164
+#: app/panel/window.py:165
 msgid "Close the app (the overlay with it)"
 msgstr ""
 
-#: translate/backends/claude.py:129 translate/backends/openai.py:85
+#: translate/backends/claude.py:129 translate/backends/compatible.py:112 translate/backends/deepl.py:113 translate/backends/openai.py:85
 msgid "Connected ({name})"
 msgstr ""
 
@@ -179,12 +203,20 @@ msgstr ""
 msgid "Connecting…"
 msgstr ""
 
-#: app/panel/cards.py:737
+#: app/panel/cards.py:831
 msgid "Copies these diagnostics for a bug report"
 msgstr ""
 
-#: app/panel/cards.py:737
+#: app/panel/cards.py:911
+msgid "Copy"
+msgstr ""
+
+#: app/panel/cards.py:831
 msgid "Copy report"
+msgstr ""
+
+#: app/panel/cards.py:911
+msgid "Copy the address"
 msgstr ""
 
 #: app/start_window.py:593
@@ -199,8 +231,16 @@ msgstr ""
 msgid "could not be read ({error})"
 msgstr ""
 
+#: translate/backends/deepl.py:67
+msgid "Could not reach DeepL (check your internet connection)."
+msgstr ""
+
 #: translate/backends/claude.py:48
 msgid "Could not reach the Claude API (check your internet connection)."
+msgstr ""
+
+#: translate/backends/compatible.py:59
+msgid "Could not reach the model's server. Check its address, and that it is running."
 msgstr ""
 
 #: translate/backends/openai.py:44
@@ -211,7 +251,7 @@ msgstr ""
 msgid "Could not talk to {service} ({error})."
 msgstr ""
 
-#: app/panel/cards.py:753 app/panel/controls.py:134
+#: app/panel/cards.py:847 app/panel/controls.py:139
 msgid "CPU"
 msgstr ""
 
@@ -223,35 +263,55 @@ msgstr ""
 msgid "Database folder"
 msgstr ""
 
+#: app/panel/cards.py:46
+msgid "DeepL (your API key)"
+msgstr ""
+
+#: app/panel/cards.py:52
+msgid "DeepL API key"
+msgstr ""
+
+#: translate/backends/deepl.py:126 translate/backends/deepl.py:181
+msgid "DeepL does not translate into {language}. Choose another engine for it."
+msgstr ""
+
+#: translate/backends/deepl.py:66
+msgid "DeepL is busy right now (too many requests). Wait a minute and try again."
+msgstr ""
+
+#: translate/backends/deepl.py:185
+msgid "DeepL refused the request: {message}"
+msgstr ""
+
 #: app/dialogs.py:199 app/dialogs.py:248 app/dialogs.py:258 app/dialogs.py:263
 msgid "Detect"
 msgstr ""
 
-#: app/panel/controls.py:135 app/panel/controls.py:84
+#: app/panel/controls.py:140 app/panel/controls.py:86
 msgid "Diagnostics"
 msgstr ""
 
-#: app/panel/cards.py:790
+#: app/panel/cards.py:891
 msgid "Diagnostics copied."
 msgstr ""
 
-#: app/panel/cards.py:115 app/panel/cards.py:86
+#: app/panel/cards.py:152 app/panel/cards.py:94
 msgid "Dialogue"
 msgstr ""
 
-#: app/panel/cards.py:251
+#: app/panel/cards.py:288
 msgid "Dialogue area saved."
 msgstr ""
 
-#: app/panel/cards.py:117
+#: app/panel/cards.py:154
 msgid "Dialogue on frosted glass"
 msgstr ""
 
-#: app/panel/cards.py:87
+#: app/panel/cards.py:95
 msgid "Dialogue, subtitles, narration and choices"
 msgstr ""
 
-#: app/panel/cards.py:665 app/start_window.py:226
+#: app/panel/cards.py:755 app/start_window.py:226
 msgid "Download"
 msgstr ""
 
@@ -259,39 +319,39 @@ msgstr ""
 msgid "Download it"
 msgstr ""
 
-#: app/panel/cards.py:656
+#: app/panel/cards.py:746
 msgid "Download MeikiOCR and NVIDIA's CUDA libraries ({size})? They stay in the app's models folder, and the text reader runs on your graphics card with them.<br><br>From PyPI: ONNX Runtime's CUDA build (MIT) and NVIDIA's CUDA and cuDNN runtime libraries (NVIDIA's licenses). From Hugging Face: MeikiOCR's models ({license}, LGPL-3.0)."
 msgstr ""
 
-#: app/panel/cards.py:589
+#: app/panel/cards.py:679
 msgid "Download MeikiOCR and what it needs, once"
 msgstr ""
 
-#: app/panel/cards.py:511 app/panel/cards.py:679
+#: app/panel/cards.py:601 app/panel/cards.py:769
 msgid "Download stopped: Install goes on where it stopped."
 msgstr ""
 
-#: app/panel/cards.py:289
+#: app/panel/cards.py:327
 msgid "Download the model and the program that runs it, once"
 msgstr ""
 
-#: app/panel/cards.py:488
+#: app/panel/cards.py:578
 msgid "Download {name} and the program that runs it ({size})? It translates on this computer, on the graphics card when it can: free, and nothing you read leaves this computer."
 msgstr ""
 
-#: app/panel/cards.py:503 app/panel/cards.py:671
+#: app/panel/cards.py:593 app/panel/cards.py:761
 msgid "Downloading…"
 msgstr ""
 
-#: app/panel/cards.py:145
+#: app/panel/cards.py:182
 msgid "Drag a box over the game's dialogue box"
 msgstr ""
 
-#: app/panel/cards.py:234
+#: app/panel/cards.py:271
 msgid "Drag a box over the game's dialogue box: everywhere its text can appear"
 msgstr ""
 
-#: app/panel/cards.py:233
+#: app/panel/cards.py:270
 msgid "Drag a box over where the speaker's name appears"
 msgstr ""
 
@@ -299,7 +359,15 @@ msgstr ""
 msgid "Empty"
 msgstr ""
 
-#: app/panel/window.py:242
+#: app/panel/cards.py:113
+msgid "Every translation white with a black outline (off: in the colours of the game's text)"
+msgstr ""
+
+#: app/panel/cards.py:345
+msgid "Fill in a known server's address"
+msgstr ""
+
+#: app/panel/window.py:243
 msgid "Fold away ({keys})"
 msgstr ""
 
@@ -307,19 +375,27 @@ msgstr ""
 msgid "Fold the panel"
 msgstr ""
 
+#: translate/backends/deepl.py:112
+msgid "free plan"
+msgstr ""
+
 #: app/start_window.py:191
 msgid "Game settings"
+msgstr ""
+
+#: app/panel/cards.py:107
+msgid "Game's size"
 msgstr ""
 
 #: app/start_window.py:132
 msgid "GAMES"
 msgstr ""
 
-#: app/panel/window.py:142
+#: app/panel/window.py:143
 msgid "Games: stop the HUD and choose a game or its database"
 msgstr ""
 
-#: app/panel/window.py:492
+#: app/panel/window.py:495
 msgid "Games…"
 msgstr ""
 
@@ -327,15 +403,15 @@ msgstr ""
 msgid "Get the translation"
 msgstr ""
 
-#: app/panel/controls.py:134
+#: app/panel/controls.py:139
 msgid "GPU"
 msgstr ""
 
-#: app/panel/cards.py:752
+#: app/panel/cards.py:846
 msgid "GPU (CUDA)"
 msgstr ""
 
-#: app/panel/cards.py:752
+#: app/panel/cards.py:846
 msgid "GPU (DirectML)"
 msgstr ""
 
@@ -343,15 +419,15 @@ msgstr ""
 msgid "graphics card"
 msgstr ""
 
-#: app/panel/cards.py:49
+#: app/panel/cards.py:57
 msgid "Grows with the text"
 msgstr ""
 
-#: app/panel/cards.py:811
+#: app/panel/cards.py:965
 msgid "Handle on the edge when folded"
 msgstr ""
 
-#: app/panel/window.py:104
+#: app/panel/window.py:105
 msgid "Help"
 msgstr ""
 
@@ -359,31 +435,35 @@ msgstr ""
 msgid "Help (opens the guide)"
 msgstr ""
 
-#: app/panel/edge.py:64 app/panel/hotkeys.py:12 app/panel/window.py:499
+#: app/panel/edge.py:64 app/panel/hotkeys.py:12 app/panel/window.py:502
 msgid "Hide / show translations"
 msgstr ""
 
-#: app/panel/controls.py:123 app/panel/controls.py:63
+#: app/panel/controls.py:128 app/panel/controls.py:64
 msgid "Hide translations"
 msgstr ""
 
-#: app/panel/cards.py:289 app/panel/cards.py:538 app/panel/cards.py:589 app/panel/cards.py:702
+#: app/panel/cards.py:930
+msgid "In OBS: add a Browser source with this address and {size}, above your capture of the game (Game or Window capture: the game without the overlay)."
+msgstr ""
+
+#: app/panel/cards.py:327 app/panel/cards.py:628 app/panel/cards.py:679 app/panel/cards.py:792
 msgid "Install"
 msgstr ""
 
-#: app/panel/cards.py:654
+#: app/panel/cards.py:744
 msgid "Install MeikiOCR"
 msgstr ""
 
-#: app/panel/cards.py:496
+#: app/panel/cards.py:586
 msgid "Install {name}"
 msgstr ""
 
-#: app/panel/cards.py:52
+#: app/panel/cards.py:60
 msgid "Instant (may flicker on hard text)"
 msgstr ""
 
-#: app/panel/cards.py:389
+#: app/panel/cards.py:458
 msgid "Into {language}"
 msgstr ""
 
@@ -391,11 +471,11 @@ msgstr ""
 msgid "Japanese"
 msgstr ""
 
-#: app/panel/cards.py:828
+#: app/panel/cards.py:982
 msgid "Kept on this computer only: what the next database should add"
 msgstr ""
 
-#: app/panel/cards.py:373
+#: app/panel/cards.py:437
 msgid "Key saved: {key}"
 msgstr ""
 
@@ -403,11 +483,11 @@ msgstr ""
 msgid "Korean"
 msgstr ""
 
-#: app/panel/cards.py:561
+#: app/panel/cards.py:651
 msgid "last problem: {why}"
 msgstr ""
 
-#: app/panel/cards.py:803
+#: app/panel/cards.py:957
 msgid "Left"
 msgstr ""
 
@@ -415,31 +495,31 @@ msgstr ""
 msgid "lines are translated live, if live translation is on"
 msgstr ""
 
-#: app/panel/cards.py:264
+#: app/panel/cards.py:302
 msgid "Live translation"
 msgstr ""
 
-#: app/session.py:319
+#: app/session.py:354
 msgid "Live translation is off."
 msgstr ""
 
-#: app/session.py:340
+#: app/session.py:375
 msgid "Live translation is off: {why}"
 msgstr ""
 
-#: app/session.py:225 app/session.py:317
+#: app/session.py:260 app/session.py:352
 msgid "Live translation is on."
 msgstr ""
 
-#: app/panel/window.py:405
+#: app/panel/window.py:408
 msgid "live translation stopped"
 msgstr ""
 
-#: app/panel/window.py:406
+#: app/panel/window.py:409
 msgid "Live translation stopped: {why}"
 msgstr ""
 
-#: app/panel/window.py:409
+#: app/panel/window.py:412
 msgid "live: {n} lines"
 msgstr ""
 
@@ -447,31 +527,35 @@ msgstr ""
 msgid "MeikiOCR (NVIDIA, faster)"
 msgstr ""
 
-#: app/panel/cards.py:680
+#: app/panel/cards.py:770
 msgid "MeikiOCR is installed."
 msgstr ""
 
-#: app/panel/cards.py:621
+#: app/panel/cards.py:711
 msgid "MeikiOCR needs an NVIDIA graphics card: this computer reads with the standard reader."
 msgstr ""
 
-#: app/panel/cards.py:630
+#: app/panel/cards.py:720
 msgid "MeikiOCR reads Japanese games; others use the standard reader."
 msgstr ""
 
-#: app/panel/cards.py:618
+#: app/panel/cards.py:708
 msgid "MeikiOCR runs on Windows only for now: this computer reads with the standard reader."
 msgstr ""
 
-#: app/panel/cards.py:88
+#: app/panel/cards.py:96
 msgid "Menus"
 msgstr ""
 
-#: app/panel/cards.py:89
+#: app/panel/cards.py:97
 msgid "Menus, labels and other on-screen text"
 msgstr ""
 
-#: app/panel/controls.py:87
+#: app/panel/cards.py:413
+msgid "Model name (Test lists them)"
+msgstr ""
+
+#: app/panel/controls.py:91
 msgid "More"
 msgstr ""
 
@@ -491,19 +575,19 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: app/panel/cards.py:251
+#: app/panel/cards.py:288
 msgid "Name area saved."
 msgstr ""
 
-#: app/panel/cards.py:147
+#: app/panel/cards.py:184
 msgid "Name area…"
 msgstr ""
 
-#: app/panel/cards.py:585
+#: app/panel/cards.py:675
 msgid "Needs an NVIDIA graphics card"
 msgstr ""
 
-#: app/panel/cards.py:178
+#: app/panel/cards.py:215
 msgid "No area yet: open a conversation in the game, then Set area…"
 msgstr ""
 
@@ -511,7 +595,7 @@ msgstr ""
 msgid "No Claude API key is set. Create one at console.anthropic.com (Settings > API keys) and paste it into the settings."
 msgstr ""
 
-#: app/session.py:421
+#: app/session.py:474
 msgid "no Claude API key yet: paste one under Live translation (you pay Anthropic for what you use)."
 msgstr ""
 
@@ -519,7 +603,15 @@ msgstr ""
 msgid "No database yet"
 msgstr ""
 
-#: app/panel/controls.py:106
+#: translate/backends/deepl.py:56
+msgid "No DeepL API key is set. Create one at deepl.com (Account > API keys; the free plan translates 500,000 characters a month) and paste it into the settings."
+msgstr ""
+
+#: app/session.py:464
+msgid "no DeepL API key yet: paste one under Live translation (DeepL's free plan translates 500,000 characters a month)."
+msgstr ""
+
+#: app/panel/controls.py:111
 msgid "No game window chosen"
 msgstr ""
 
@@ -527,7 +619,7 @@ msgstr ""
 msgid "No Japanese, Chinese or Korean text found on the game's screen."
 msgstr ""
 
-#: app/panel/cards.py:373
+#: app/panel/cards.py:442
 msgid "No key saved yet"
 msgstr ""
 
@@ -535,8 +627,12 @@ msgstr ""
 msgid "No OpenAI API key is set. Create one at platform.openai.com (API keys) and paste it into the settings."
 msgstr ""
 
-#: app/session.py:416
+#: app/session.py:458
 msgid "no OpenAI API key yet: paste one under Live translation (you pay OpenAI for what you use)."
+msgstr ""
+
+#: app/session.py:470
+msgid "no server address yet: type it under Live translation."
 msgstr ""
 
 #: app/start_window.py:55
@@ -551,7 +647,7 @@ msgstr ""
 msgid "not a database file"
 msgstr ""
 
-#: app/panel/cards.py:369 app/panel/cards.py:627
+#: app/panel/cards.py:432 app/panel/cards.py:717
 msgid "Not installed yet: {size} to download, once."
 msgstr ""
 
@@ -559,19 +655,27 @@ msgstr ""
 msgid "not used: {why}"
 msgstr ""
 
-#: app/panel/cards.py:39
+#: app/panel/cards.py:42
 msgid "Off"
 msgstr ""
 
-#: app/panel/cards.py:49
+#: app/panel/cards.py:857
+msgid "On this system the text reader runs on the CPU: the GPU reader is for Windows only for now."
+msgstr ""
+
+#: app/panel/cards.py:57
 msgid "One window"
+msgstr ""
+
+#: app/panel/cards.py:439
+msgid "Only the text is sent, to the server above. A server on this computer usually needs no key."
 msgstr ""
 
 #: app/start_window.py:267
 msgid "Open"
 msgstr ""
 
-#: app/panel/cards.py:835
+#: app/panel/cards.py:989
 msgid "Open folder"
 msgstr ""
 
@@ -579,7 +683,7 @@ msgstr ""
 msgid "Open the folder: drop database files in, or take them out"
 msgstr ""
 
-#: app/panel/cards.py:231
+#: app/panel/cards.py:268
 msgid "Open the game with a conversation on screen first."
 msgstr ""
 
@@ -591,39 +695,39 @@ msgstr ""
 msgid "Open the HUD: the overlay starts and waits for the game"
 msgstr ""
 
-#: app/panel/cards.py:46
+#: app/panel/cards.py:51
 msgid "OpenAI API key (sk-…)"
 msgstr ""
 
-#: app/panel/window.py:411
+#: app/panel/window.py:414
 msgid "Overlay off"
 msgstr ""
 
-#: app/panel/window.py:401
+#: app/panel/window.py:404
 msgid "Overlay on"
 msgstr ""
 
-#: app/panel/window.py:395
+#: app/panel/window.py:398
 msgid "Overlay on: it cannot work (see Diagnostics)"
 msgstr ""
 
-#: app/panel/window.py:399
+#: app/panel/window.py:402
 msgid "Overlay on: translations hidden"
 msgstr ""
 
-#: app/panel/window.py:397
+#: app/panel/window.py:400
 msgid "Overlay on: waiting for the game window"
 msgstr ""
 
-#: app/session.py:223
+#: app/session.py:258
 msgid "Overlay running ({n} lines in the databases)."
 msgstr ""
 
-#: app/session.py:245
+#: app/session.py:280
 msgid "Overlay stopped."
 msgstr ""
 
-#: app/panel/cards.py:801
+#: app/panel/cards.py:955
 msgid "Panel side"
 msgstr ""
 
@@ -639,11 +743,11 @@ msgstr ""
 msgid "Pick the game's window (the game must be open)"
 msgstr ""
 
-#: app/panel/cards.py:713
+#: app/panel/cards.py:803
 msgid "PLaMo Community License"
 msgstr ""
 
-#: app/panel/cards.py:391
+#: app/panel/cards.py:460
 msgid "PLaMo does not offer it"
 msgstr ""
 
@@ -651,11 +755,11 @@ msgstr ""
 msgid "PLaMo does not translate {language}: choose Claude or ChatGPT under Live translation."
 msgstr ""
 
-#: app/panel/cards.py:492
+#: app/panel/cards.py:582
 msgid "PLaMo is Preferred Networks' translation model. To use it you accept its license, below: among other things you must be 18 or older (or have a parent's or guardian's consent), and using it for business needs their free registration."
 msgstr ""
 
-#: app/panel/cards.py:40
+#: app/panel/cards.py:43
 msgid "PLaMo, on this computer (free)"
 msgstr ""
 
@@ -683,6 +787,10 @@ msgstr ""
 msgid "Press the keys… (Esc: keep)"
 msgstr ""
 
+#: translate/backends/deepl.py:112
+msgid "Pro"
+msgstr ""
+
 #: translate/backends/plamo.py:129
 msgid "processor"
 msgstr ""
@@ -691,11 +799,11 @@ msgstr ""
 msgid "Read the game's window to find its language"
 msgstr ""
 
-#: app/panel/cards.py:825
+#: app/panel/cards.py:979
 msgid "Reading"
 msgstr ""
 
-#: app/panel/cards.py:773
+#: app/panel/cards.py:874
 msgid "Reading time (median / slowest 5 %): dialogue {d} · menus {u} · all {t}"
 msgstr ""
 
@@ -715,7 +823,7 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
-#: app/panel/cards.py:779
+#: app/panel/cards.py:880
 msgid "Remembered menus: {recalled} · cache {hits} hits / {misses} misses · lines no database had: {unknown}"
 msgstr ""
 
@@ -739,23 +847,23 @@ msgstr ""
 msgid "Remove, keep its files"
 msgstr ""
 
-#: app/panel/cards.py:149
+#: app/panel/cards.py:186
 msgid "Reset"
 msgstr ""
 
-#: app/panel/cards.py:803
+#: app/panel/cards.py:957
 msgid "Right"
 msgstr ""
 
-#: app/panel/cards.py:368
+#: app/panel/cards.py:431
 msgid "Runs on this computer: free, and nothing you read leaves it."
 msgstr ""
 
-#: app/panel/controls.py:63
+#: app/panel/controls.py:64
 msgid "Same as the hotkey"
 msgstr ""
 
-#: app/panel/cards.py:304
+#: app/panel/cards.py:360
 msgid "Save"
 msgstr ""
 
@@ -763,19 +871,31 @@ msgstr ""
 msgid "Saved."
 msgstr ""
 
-#: app/panel/cards.py:145
+#: app/panel/cards.py:340
+msgid "Server address (http://localhost:11434/v1)"
+msgstr ""
+
+#: app/panel/cards.py:345
+msgid "Servers"
+msgstr ""
+
+#: app/panel/cards.py:182
 msgid "Set area…"
 msgstr ""
 
-#: app/panel/window.py:492
+#: app/panel/window.py:495
 msgid "Show / fold the panel"
 msgstr ""
 
-#: app/panel/cards.py:118
+#: app/panel/cards.py:155
 msgid "Show dialogue on frosted glass in the dialogue area (off: covered where it is, like other text)"
 msgstr ""
 
-#: app/panel/controls.py:123
+#: app/panel/cards.py:902
+msgid "Show the translations to OBS"
+msgstr ""
+
+#: app/panel/controls.py:128
 msgid "Show translations"
 msgstr ""
 
@@ -787,7 +907,7 @@ msgstr ""
 msgid "Standard (any graphics card)"
 msgstr ""
 
-#: app/panel/controls.py:119 app/panel/controls.py:60
+#: app/panel/controls.py:124 app/panel/controls.py:61
 msgid "Start"
 msgstr ""
 
@@ -795,63 +915,67 @@ msgstr ""
 msgid "Start the game, then pick its window:"
 msgstr ""
 
-#: app/panel/window.py:483 app/panel/window.py:497
+#: app/panel/window.py:486 app/panel/window.py:500
 msgid "Start the overlay"
 msgstr ""
 
-#: app/panel/cards.py:753 app/panel/controls.py:134
+#: app/panel/cards.py:847 app/panel/controls.py:139
 msgid "starting"
 msgstr ""
 
-#: app/panel/cards.py:457
+#: app/panel/cards.py:542
 msgid "Starting the model…"
 msgstr ""
 
-#: app/session.py:184
+#: app/session.py:219
 msgid "Starting the overlay (loading the databases and the text reader)…"
 msgstr ""
 
-#: app/panel/window.py:390
+#: app/panel/window.py:393
 msgid "Starting the overlay…"
 msgstr ""
 
-#: app/panel/window.py:450
+#: app/panel/window.py:453
 msgid "Starting the text reader again…"
 msgstr ""
 
-#: app/panel/controls.py:115
+#: app/panel/controls.py:120
 msgid "Starting…"
 msgstr ""
 
-#: app/panel/cards.py:133
+#: app/panel/cards.py:170
 msgid "Stays on screen"
 msgstr ""
 
-#: app/panel/cards.py:502 app/panel/cards.py:670 app/panel/controls.py:119
+#: app/panel/cards.py:592 app/panel/cards.py:760 app/panel/controls.py:124
 msgid "Stop"
 msgstr ""
 
-#: app/panel/hotkeys.py:13 app/panel/window.py:483
+#: app/panel/hotkeys.py:13 app/panel/window.py:486
 msgid "Stop the overlay"
 msgstr ""
 
-#: app/panel/cards.py:559
+#: app/panel/cards.py:649
 msgid "stopped: {why}"
+msgstr ""
+
+#: app/panel/controls.py:89
+msgid "Streaming (OBS)"
 msgstr ""
 
 #: app/start_window.py:148
 msgid "System language"
 msgstr ""
 
-#: app/panel/window.py:436
+#: app/panel/window.py:439
 msgid "Tell the app which window is the game: press 'Choose window…'."
 msgstr ""
 
-#: app/panel/cards.py:275
+#: app/panel/cards.py:313
 msgid "Test"
 msgstr ""
 
-#: app/panel/cards.py:457
+#: app/panel/cards.py:542
 msgid "Testing…"
 msgstr ""
 
@@ -859,12 +983,16 @@ msgstr ""
 msgid "Text in"
 msgstr ""
 
-#: app/panel/cards.py:574
+#: app/panel/cards.py:664
 msgid "Text reader"
 msgstr ""
 
-#: app/panel/cards.py:754
+#: app/panel/cards.py:848
 msgid "Text reader: {reader} · Capture: {capture}"
+msgstr ""
+
+#: app/panel/cards.py:104
+msgid "Text size"
 msgstr ""
 
 #: app/start_window.py:519
@@ -891,11 +1019,11 @@ msgstr ""
 msgid "The Claude model {model} is not available to your API key. Choose another model in the settings."
 msgstr ""
 
-#: app/panel/cards.py:762
+#: app/panel/cards.py:857 app/panel/cards.py:863
 msgid "The CPU reader is slow."
 msgstr ""
 
-#: app/panel/window.py:373
+#: app/panel/window.py:374
 msgid "The database folder changed: the overlay takes it anew."
 msgstr ""
 
@@ -927,11 +1055,11 @@ msgstr ""
 msgid "The game's window cannot be captured right now (a lock screen, a lost display?)."
 msgstr ""
 
-#: app/panel/cards.py:760
+#: app/panel/cards.py:861
 msgid "The GPU reader did not start; see the app's log."
 msgstr ""
 
-#: app/panel/cards.py:439
+#: app/panel/cards.py:524
 msgid "The key could not be saved: {why}"
 msgstr ""
 
@@ -975,6 +1103,22 @@ msgstr ""
 msgid "The local model stopped answering."
 msgstr ""
 
+#: translate/backends/compatible.py:67
+msgid "the model"
+msgstr ""
+
+#: translate/backends/compatible.py:102
+msgid "The model declined to translate this text."
+msgstr ""
+
+#: translate/backends/compatible.py:56
+msgid "The model's server is busy right now (too many requests). Wait a minute and try again."
+msgstr ""
+
+#: translate/backends/compatible.py:200 translate/backends/compatible.py:203
+msgid "The model's server refused the request: {message}"
+msgstr ""
+
 #: translate/backends/openai.py:42
 msgid "The OpenAI API is busy right now (too many requests, or overloaded). Wait a minute and try again."
 msgstr ""
@@ -987,16 +1131,36 @@ msgstr ""
 msgid "The OpenAI model {model} is not available to your API key. Choose another model in the settings."
 msgstr ""
 
-#: app/session.py:201 app/session.py:218
+#: app/session.py:236 app/session.py:253
 msgid "The overlay could not start: {why}"
 msgstr ""
 
-#: app/panel/window.py:419
+#: app/panel/window.py:422
 msgid "The overlay works again."
+msgstr ""
+
+#: app/session.py:165
+msgid "The page for OBS could not start: every port it tries is taken."
+msgstr ""
+
+#: translate/backends/compatible.py:51
+msgid "The server asks for an API key: paste it into the settings."
+msgstr ""
+
+#: translate/backends/compatible.py:193
+msgid "The server has no model {model}, or {url} is not its address (it usually ends in /v1)."
+msgstr ""
+
+#: translate/backends/compatible.py:52
+msgid "The server refused the API key. Check that it was pasted completely, or paste a new one into the settings."
 msgstr ""
 
 #: translate/local.py:228 translate/local.py:235
 msgid "The server's archive is not as expected."
+msgstr ""
+
+#: app/panel/cards.py:929
+msgid "the size of the game's picture (its resolution)"
 msgstr ""
 
 #: hud/app.py:86
@@ -1007,8 +1171,12 @@ msgstr ""
 msgid "The text reader keeps failing: see the log in the data folder."
 msgstr ""
 
-#: app/panel/cards.py:135
+#: app/panel/cards.py:172
 msgid "The translation types in with the game's text (off: shown whole at once)"
+msgstr ""
+
+#: app/panel/cards.py:108
+msgid "The translation's size next to the game's text (smaller text is squeezed less)"
 msgstr ""
 
 #: app/start_window.py:524
@@ -1019,7 +1187,7 @@ msgstr ""
 msgid "There is no {language} database at this link yet. It has: {languages}."
 msgstr ""
 
-#: app/panel/cards.py:624
+#: app/panel/cards.py:714
 msgid "This computer has an NVIDIA graphics card: MeikiOCR reads about twice as fast."
 msgstr ""
 
@@ -1027,11 +1195,11 @@ msgstr ""
 msgid "This game has no download link yet. Paste the link first."
 msgstr ""
 
-#: app/panel/cards.py:884
+#: app/panel/cards.py:1038
 msgid "Those keys cannot be a hotkey: add Ctrl, Alt or Win."
 msgstr ""
 
-#: app/panel/cards.py:84
+#: app/panel/cards.py:92
 msgid "Translate"
 msgstr ""
 
@@ -1039,7 +1207,7 @@ msgstr ""
 msgid "Translate into"
 msgstr ""
 
-#: app/panel/cards.py:271
+#: app/panel/cards.py:309
 msgid "Translates text no database has, as it appears (only the text is sent, never pictures; PLaMo sends nothing at all)"
 msgstr ""
 
@@ -1047,23 +1215,39 @@ msgstr ""
 msgid "Translation database (*.sqlite *.sqlite3 *.db);;All files (*)"
 msgstr ""
 
-#: app/panel/cards.py:730
+#: app/panel/cards.py:824
 msgid "Try the GPU again"
 msgstr ""
 
-#: app/panel/cards.py:134
+#: translate/backends/compatible.py:131
+msgid "Type the address of the model's server (for example http://localhost:11434/v1 for Ollama)."
+msgstr ""
+
+#: translate/backends/compatible.py:138
+msgid "Type the name of the model to use (Test lists what the server has)."
+msgstr ""
+
+#: app/panel/cards.py:171
 msgid "Types in"
+msgstr ""
+
+#: translate/backends/deepl.py:104
+msgid "Unexpected answer from DeepL."
 msgstr ""
 
 #: translate/backends/claude.py:179
 msgid "Unexpected answer from the Claude API: {error}"
 msgstr ""
 
+#: translate/backends/compatible.py:97
+msgid "Unexpected answer from the model's server."
+msgstr ""
+
 #: app/panel/edge.py:63
 msgid "Unfold the panel"
 msgstr ""
 
-#: app/panel/window.py:243
+#: app/panel/window.py:244
 msgid "Unfold the panel ({keys})"
 msgstr ""
 
@@ -1087,27 +1271,35 @@ msgstr ""
 msgid "version {version}"
 msgstr ""
 
-#: app/panel/controls.py:111
+#: app/panel/controls.py:116
 msgid "Waiting for the game window"
 msgstr ""
 
-#: app/panel/cards.py:147
+#: app/panel/cards.py:184
 msgid "Where the speaker's name is (optional)"
+msgstr ""
+
+#: app/panel/cards.py:112
+msgid "White text"
+msgstr ""
+
+#: app/panel/cards.py:927
+msgid "width {w} and height {h}"
 msgstr ""
 
 #: app/dialogs.py:140 app/dialogs.py:192
 msgid "Window"
 msgstr ""
 
-#: app/panel/cards.py:586
+#: app/panel/cards.py:676
 msgid "Windows only for now"
 msgstr ""
 
-#: app/panel/cards.py:173
+#: app/panel/cards.py:210
 msgid "with a name area"
 msgstr ""
 
-#: app/panel/cards.py:827
+#: app/panel/cards.py:981
 msgid "Write down lines no database has"
 msgstr ""
 
@@ -1121,6 +1313,14 @@ msgstr ""
 
 #: translate/backends/claude.py:40
 msgid "Your Claude API key was refused. Check that it was pasted completely and is still active at console.anthropic.com, or paste a new one into the settings."
+msgstr ""
+
+#: translate/backends/deepl.py:61
+msgid "Your DeepL API key was refused. Check that it was pasted completely and is still active at deepl.com, or paste a new one into the settings."
+msgstr ""
+
+#: translate/backends/deepl.py:174
+msgid "Your DeepL quota is used up for this month (or a cost limit you set at deepl.com was reached)."
 msgstr ""
 
 #: translate/backends/openai.py:39
@@ -1151,7 +1351,7 @@ msgstr ""
 msgid "{game} removed."
 msgstr ""
 
-#: app/panel/cards.py:887
+#: app/panel/cards.py:1041
 msgid "{keys} is one of the app's other hotkeys already."
 msgstr ""
 
@@ -1159,11 +1359,11 @@ msgstr ""
 msgid "{language} · {done} of {total} lines"
 msgstr ""
 
-#: app/panel/cards.py:512
+#: app/panel/cards.py:602
 msgid "{name} is installed."
 msgstr ""
 
-#: app/panel/cards.py:557
+#: app/panel/cards.py:647
 msgid "{n} failed"
 msgstr ""
 
@@ -1179,7 +1379,7 @@ msgid_plural "{n} lines in {language}"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/panel/cards.py:555
+#: app/panel/cards.py:645
 msgid "{n} lines translated live"
 msgstr ""
 
@@ -1189,7 +1389,7 @@ msgid_plural "{n} live translations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/panel/cards.py:857
+#: app/panel/cards.py:1011
 msgid "{n} written down this session and before"
 msgstr ""
 
@@ -1197,6 +1397,6 @@ msgstr ""
 msgid "{offline} No answer came within {seconds} s."
 msgstr ""
 
-#: app/panel/window.py:363
+#: app/panel/window.py:364
 msgid "{what}: try again when it is done."
 msgstr ""

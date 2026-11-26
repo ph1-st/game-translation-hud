@@ -223,8 +223,45 @@ def test_a_glossary_file_serves_every_language_it_holds(tmp_path):
 
 
 
+def test_an_item_with_its_count_is_the_item_and_the_count_stays():
+    lk = Lookup([mk("繊維", 1, "Fiber"), mk("軟らかい木", 2, "Soft Wood"),
+                 mk("木材", 3, "Lumber"), mk("強化素材セット", 4, "Upgrade Set"),
+                 mk("軟らかい木×の札", 5, "Soft Wood Tag")])  # (a near line)  # fmt: skip
+    for reading, english in [
+        ("繊維×2", "Fiber ×2"),  # (the game's multiplication sign)
+        ("軟らかい木 × 12", "Soft Wood ×12"),
+        ("繊維x３", "Fiber ×3"),
+        ("木材+5", "Lumber +5"),
+    ]:
+        m = lk.match(reading)
+        assert m is not None and m.kind == "exact" and m.translation == english, reading
+    assert lk.match("強化素材×2") is None  # never the start of a longer line
+    assert lk.match("繊維").translation == "Fiber"  # (the line itself: no count)
+
+
 def test_a_digit_glued_to_a_label_is_an_icon_only_when_the_rest_is_a_line():
     lk = Lookup([mk("星祝", 1, "Star Blessing"), mk("大地の祝福を受けし者", 2, "Earth-Blessed")])
     m = lk.match("6星祝")  # the lock icon beside the tab, read as a digit
     assert m is not None and m.kind == "exact" and m.translation == "Star Blessing"
     assert lk.match("5大地の祝福") is None  # never the start of a line without its number
+
+
+def test_a_key_prompt_the_game_shows_as_an_icon_is_named_by_its_action():
+    from capture.profile import load_profile
+
+    prompts = load_profile("azur-promilia").key_prompts
+    lines = [
+        mk("移動中にMainInput/MainEvadeを押すと回避できます。", 1,
+           "Press MainInput/MainEvade while moving to dodge."),
+        mk("MainInput/MainSwitchHero1 MainInput/MainSwitchHero2で切り替え", 2,
+           "Switch with MainInput/MainSwitchHero{n} MainInput/MainSwitchHero{n}"),
+        mk("GamepadUI/Common_RStickMoveでチーム編成を選択", 3,
+           "GamepadUI/Common_RStickMove to select Team Setup"),
+    ]  # fmt: skip
+    lk = Lookup(lines, key_prompts=prompts)
+    m = lk.match("移動中にを押すと回避できます。")  # (the key's icon read as nothing)
+    assert m is not None and m.kind == "exact"
+    assert m.translation == "Press [Evade] while moving to dodge."
+    assert lk.match("で切り替え").translation == "Switch with [Switch Hero]"
+    assert lk.match("でチーム編成を選択").translation == "[R Stick Move] to select Team Setup"
+    assert Lookup(lines).match("移動中にを押すと回避できます。") is None  # (without the profile's)

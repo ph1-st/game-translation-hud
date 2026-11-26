@@ -163,7 +163,7 @@ def build_core(config: HudConfig, engine: OcrEngine | None = None) -> HudCore:
         profile = profile.with_overrides(load_overrides(config.overrides))
     lookup = Lookup.from_dbs(
         list(config.dbs), player_name=config.player,
-        player_fallback=languages.you(config.target_lang),
+        player_fallback=languages.you(config.target_lang), key_prompts=profile.key_prompts,
     )  # fmt: skip
     glossary = config.glossary
     if not isinstance(glossary, Glossary):
@@ -172,13 +172,23 @@ def build_core(config: HudConfig, engine: OcrEngine | None = None) -> HudCore:
         glossary = Glossary.combine(
             Glossary.from_dbs(config.dbs), Glossary.load(path, target=config.target_lang)
         )
-    cache = CoverCache(Path(config.cache_dir) / "covers.json" if config.cache_dir else None)
+    cache = CoverCache(
+        Path(config.cache_dir) / cache_name(config.text_scale) if config.cache_dir else None
+    )
     return HudCore(
         profile, lookup, glossary, cache,
         engine or start_ocr(profile, config.device, config.reader, config.reader_dir),
         get_style(config.cover_style), cover_mode=config.cover_mode,
         confirmation_mode=config.confirmation_mode, target_lang=config.target_lang,
+        text_scale=config.text_scale, plain_text=config.plain_text,
     )  # fmt: skip
+
+
+def cache_name(text_scale: float) -> str:
+    """The cover cache's file: one per text size (its boxes and fonts were laid out for
+    it), so going back to a size finds its covers again."""
+    pct = int(round(100 * text_scale))
+    return "covers.json" if pct == 100 else f"covers.{pct}.json"
 
 
 class OcrWorker(threading.Thread):

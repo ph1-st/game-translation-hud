@@ -22,7 +22,9 @@ from hud.config import CONFIRMATION_MODES
 log = logging.getLogger("app")
 
 GLASS_STYLES = ("grow", "window")  # dialogue glass: grows with the text | one fixed window
-LIVE_ENGINES = ("plamo", "claude", "openai")  # PLaMo on this computer, or a key of your own
+TEXT_SIZES = (70, 80, 90, 100, 115, 130, 150)  # the translation's size, % of the game's
+# PLaMo on this computer, a key of your own, or a model behind a server you name
+LIVE_ENGINES = ("plamo", "claude", "openai", "deepl", "custom")
 GAME_ID_RE = re.compile(r"[a-z0-9][a-z0-9_-]*")  # a folder name: no separators, no ".."
 _SAVE_LOCK = threading.Lock()
 
@@ -59,6 +61,8 @@ class LiveSettings:
     plamo_model: str = "2b"  # one of translate.local.MODELS
     claude_model: str = "claude-haiku-5-5"
     openai_model: str = "gpt-5.4-mini"
+    custom_url: str = ""  # an OpenAI-compatible server ("http://localhost:11434/v1")
+    custom_model: str = ""  # ...and the model it runs
 
 
 @dataclass
@@ -69,6 +73,10 @@ class Settings:
     translate_dialogue: bool = True  # the story: dialogue, subtitles, narration, choices
     translate_ui: bool = True  # menus, labels, key hints and everything else
     log_misses: bool = True  # write down the lines no database has (games/<id>/misses/)
+    text_size: int = 100  # the translation's size, one of TEXT_SIZES (100: the game's own)
+    white_text: bool = False  # white with a black outline, not the Japanese's colours
+    stream_source: bool = False  # the overlay served to OBS as a page (hud/overlay/stream.py)
+    stream_port: int = 47811  # ...on this port of 127.0.0.1 (or the next free one)
     live: LiveSettings = field(default_factory=LiveSettings)
     toggle_hotkey: str = "ctrl+shift+F8"  # hides/shows the translations
     stop_hotkey: str = "ctrl+shift+F9"  # stops the overlay
@@ -139,6 +147,8 @@ class Settings:
         s.live = _build(LiveSettings, d.get("live") if isinstance(d.get("live"), dict) else {})
         if s.live.engine not in LIVE_ENGINES:
             s.live.engine = "plamo"
+        if s.text_size not in TEXT_SIZES:
+            s.text_size = 100
         if s.panel_side not in ("right", "left"):
             s.panel_side = "right"
         if s.ocr_device not in OCR_DEVICES:

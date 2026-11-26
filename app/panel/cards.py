@@ -8,6 +8,7 @@ reloads the overlay as needed."""
 from __future__ import annotations
 
 import json
+import sys
 
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QDesktopServices
@@ -19,19 +20,21 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMenu,
     QMessageBox,
     QProgressBar,
     QRadioButton,
     QWidget,
 )
 
-from app.config import GameEntry
+from app.config import TEXT_SIZES, GameEntry
 from app.keys import get_key, mask, set_key
 from app.library import parse_region, region_text
 from app.panel.hotkeys import HOTKEYS, HotkeyButton
 from app.paths import assets_dir, models_dir
 from app.widgets import Task, button, card, combo, link_button, note, tinted
 from i18n import N_, _
+from translate.backends.compatible import SERVERS
 from translate.languages import native_name
 from translate.local import MODELS
 
@@ -40,11 +43,16 @@ ENGINES = {  # live translation: what the player picks -> its name ("off": none)
     "plamo": N_("PLaMo, on this computer (free)"),
     "claude": N_("Claude (your API key)"),
     "openai": N_("ChatGPT (your API key)"),
+    "deepl": N_("DeepL (your API key)"),
+    "custom": N_("Another model (a server you name)"),
 }
 KEY_HINTS = {
     "claude": N_("Claude API key (sk-ant-…)"),
     "openai": N_("OpenAI API key (sk-…)"),
+    "deepl": N_("DeepL API key"),
+    "custom": N_("API key, if the server asks for one"),
 }
+LISTED = ("openai", "custom")  # engines whose models Test lists (the name can be typed)
 PLAMO_LICENSE = "https://plamo.preferredai.jp/info/plamo-community-license-en"
 GLASS_STYLES = {"grow": N_("Grows with the text"), "window": N_("One window")}
 READING_MODES = {
@@ -92,11 +100,40 @@ class TranslateCard(Card):
             row.addWidget(b)
         row.addStretch(1)
         self.body.addLayout(row)
+        trow = QHBoxLayout()
+        trow.addWidget(QLabel(_("Text size")))
+        self.size = combo()
+        for pct in TEXT_SIZES:
+            self.size.addItem(_("Game's size") if pct == 100 else f"{pct} %", pct)
+        self.size.setToolTip(_("The translation's size next to the game's text (smaller "
+                               "text is squeezed less)"))
+        self.size.activated.connect(lambda _i: self._looks_changed())
+        trow.addWidget(self.size)
+        self.white = QCheckBox(_("White text"))
+        self.white.setToolTip(_("Every translation white with a black outline (off: in the "
+                                "colours of the game's text)"))
+        self.white.toggled.connect(lambda _on: self._looks_changed())
+        trow.addWidget(self.white)
+        trow.addStretch(1)
+        self.body.addLayout(trow)
 
     def refresh(self) -> None:
         s = self.win.settings
         _set_checked(self.story, s.translate_dialogue)
         _set_checked(self.menus, s.translate_ui)
+        _set_checked(self.white, s.white_text)
+        self.size.blockSignals(True)
+        self.size.setCurrentIndex(max(0, self.size.findData(s.text_size)))
+        self.size.blockSignals(False)
+
+    def _looks_changed(self) -> None:
+        s = self.win.settings
+        size, white = self.size.currentData(), self.white.isChecked()
+        if (size, white) == (s.text_size, s.white_text) or size not in TEXT_SIZES:
+            return
+        s.text_size, s.white_text = size, white
+        s.save()
+        self.win.restart_overlay()
 
     def _changed(self) -> None:
         s = self.win.settings
@@ -257,13 +294,14 @@ class DialogueCard(Card):
 
 # ---- live translation -------------------------------------------------------------------
 class LiveCard(Card):
-    """Live translation: off, PLaMo on this computer (installed with one button), or the
-    player's own key for Claude or ChatGPT, with the model to use."""
+    """Live translation: off, PLaMo on this computer (installed with one button), the
+    player's own key for Claude, ChatGPT or DeepL, or a model behind an OpenAI-compatible
+    server the player names (nothing installed for it), with the model to use."""
 
     def __init__(self, win) -> None:  # noqa: ANN001
         super().__init__(win, _("Live translation"))
         self.task: Task | None = None  # a test, or the local model's download
-        self._openai_models: list[str] = []  # what the OpenAI key can use, once asked
+        self._listed: dict[str, list[str]] = {}  # the models Test found, per engine
         erow = QHBoxLayout()
         self.engine = combo()
         for key, text in ENGINES.items():
@@ -294,7 +332,25 @@ class LiveCard(Card):
         self.body.addWidget(self.local_row)
         self.plamo_note = note(_("Built with PLaMo · {license}").format(license=_license()))
         self.body.addWidget(self.plamo_note)
-        # Claude, ChatGPT: the key and the model
+        # another model: its server's address (a list of known ones fills it in)
+        self.server_row = QWidget()
+        srow = QHBoxLayout(self.server_row)
+        srow.setContentsMargins(0, 0, 0, 0)
+        self.server = QLineEdit()
+        self.server.setPlaceholderText(_("Server address (http://localhost:11434/v1)"))
+        self.server.setToolTip(_("An OpenAI-compatible server: one on this computer (Ollama, "
+                                 "LM Studio, llama.cpp…) or a service (OpenRouter, Gemini…)"))
+        self.server.editingFinished.connect(self._server_changed)
+        srow.addWidget(self.server, 1)
+        known = button(_("Servers"), _("Fill in a known server's address"))
+        menu = QMenu(known)
+        for name, url in SERVERS.items():
+            menu.addAction(f"{name}  ·  {url}").triggered.connect(
+                lambda _c=False, u=url: self._server_chosen(u))
+        known.setMenu(menu)
+        srow.addWidget(known)
+        self.body.addWidget(self.server_row)
+        # Claude, ChatGPT, DeepL, another model: the key and the model
         self.key_row = QWidget()
         krow = QHBoxLayout(self.key_row)
         krow.setContentsMargins(0, 0, 0, 0)
@@ -333,21 +389,28 @@ class LiveCard(Card):
         local, keyed = engine == "plamo", engine in KEY_HINTS
         self.local_row.setVisible(local)
         self.plamo_note.setVisible(local)
+        self.server_row.setVisible(engine == "custom")
+        if not self.server.hasFocus():
+            self.server.setText(s.custom_url)
         self.key_row.setVisible(keyed)
-        self.model.setVisible(keyed)
+        self.model.setVisible(keyed and engine != "deepl")
         if keyed:
             self.key.setPlaceholderText(_(KEY_HINTS[engine]))
         self.model.blockSignals(True)
         self.model.clear()
-        self.model.setEditable(engine == "openai")
+        self.model.setEditable(engine in LISTED)
         if engine == "claude":
             for mid, text in CLAUDE_MODELS.items():
                 self.model.addItem(_(text), mid)
             self.model.setCurrentIndex(max(0, self.model.findData(s.claude_model)))
-        elif engine == "openai":
-            for mid in dict.fromkeys([s.openai_model, *self._openai_models]):
-                self.model.addItem(mid, mid)
-            self.model.setCurrentIndex(0)
+        elif engine in LISTED:
+            chosen = s.openai_model if engine == "openai" else s.custom_model
+            for mid in dict.fromkeys([chosen, *self._listed.get(engine, [])]):
+                if mid:
+                    self.model.addItem(mid, mid)
+            self.model.setCurrentIndex(0 if chosen else -1)
+            if engine == "custom":
+                self.model.lineEdit().setPlaceholderText(_("Model name (Test lists them)"))
             edit = self.model.lineEdit()
             if edit is not None and not edit.property("hooked"):  # (once per line edit)
                 edit.editingFinished.connect(self._model_changed)
@@ -370,7 +433,13 @@ class LiveCard(Card):
                       .format(size=_size(self._models().download_size(s.plamo_model))))
         else:
             k = get_key(engine)
-            self._say(_("Key saved: {key}").format(key=mask(k)) if k else _("No key saved yet"))
+            if k:
+                self._say(_("Key saved: {key}").format(key=mask(k)))
+            elif engine == "custom":
+                self._say(_("Only the text is sent, to the server above. A server on this "
+                            "computer usually needs no key."))
+            else:
+                self._say(_("No key saved yet"))
 
     @staticmethod
     def _models():  # noqa: ANN205 - translate.local.LocalModels
@@ -419,13 +488,29 @@ class LiveCard(Card):
 
     def _model_changed(self) -> None:
         s = self.win.settings.live
-        before = (s.claude_model, s.openai_model)
+        before = (s.claude_model, s.openai_model, s.custom_model)
         if s.engine == "claude":
             s.claude_model = self.model.currentData() or s.claude_model
         elif s.engine == "openai":
             s.openai_model = self.model.currentText().strip() or s.openai_model
-        if before != (s.claude_model, s.openai_model):
+        elif s.engine == "custom":
+            s.custom_model = self.model.currentText().strip() or s.custom_model
+        if before != (s.claude_model, s.openai_model, s.custom_model):
             self.win.settings.save()
+            self.win.live_changed()
+
+    def _server_chosen(self, url: str) -> None:
+        self.server.setText(url)
+        self._server_changed()
+
+    def _server_changed(self) -> None:
+        s = self.win.settings.live
+        url = self.server.text().strip()
+        if url != s.custom_url:
+            s.custom_url = url
+            self._listed.pop("custom", None)  # (another server: other models)
+            self.win.settings.save()
+            self.refresh()
             self.win.live_changed()
 
     def _save_key(self) -> None:
@@ -457,21 +542,26 @@ class LiveCard(Card):
         self._say(_("Starting the model…") if engine == "plamo" else _("Testing…"))
         settings = self.win.settings
 
+        if engine == "custom":
+            self._server_changed()  # (typed, not confirmed yet)
+            self._model_changed()
+
         def work(_task: Task):  # noqa: ANN202
             backend = make_backend(settings, engine)
-            msg = backend.check()
             models = None
-            if engine == "openai":
+            if engine in LISTED:
                 try:
                     models = backend.models()
-                except Exception:  # noqa: BLE001 - the list is a nicety: the test passed
+                except Exception:  # noqa: BLE001 - the list is a nicety
                     models = None
-            return msg, models
+            if engine == "custom" and not backend.model and models:
+                return _("Choose one of the server's models."), models
+            return backend.check(), models
 
         def done(res) -> None:  # noqa: ANN001
             msg, models = res
             if models:
-                self._openai_models = models
+                self._listed[engine] = models
             self._worked(msg)
 
         self._run(work, None, done)
@@ -714,6 +804,10 @@ def _license() -> str:
 
 
 # ---- diagnostics ------------------------------------------------------------------------
+GPU_PROVIDERS = ("CUDAExecutionProvider", "OpenVINOExecutionProvider")  # (off Windows)
+WINDOWS = sys.platform == "win32"  # (its ONNX Runtime has DirectML)
+
+
 class DiagnosticsCard(Card):
     """How the text reader runs, and what keeps the HUD from working; shown once the game
     window is found (or when there is a problem)."""
@@ -756,14 +850,21 @@ class DiagnosticsCard(Card):
         notes = []
         if problem:
             notes.append(tinted("⚠ " + problem, "problem"))
-        if cpu:
+        # can this build read on a GPU at all? (on Linux its ONNX Runtime is the CPU build)
+        gpu_built = WINDOWS or any(
+            p in GPU_PROVIDERS for p in ocr.get("providers") or [])
+        if cpu and not gpu_built:
+            notes.append(tinted("⚠ " + _("The CPU reader is slow."), "wait") + "<br>" + _(
+                "On this system the text reader runs on the CPU: the GPU reader is for "
+                "Windows only for now."))
+        elif cpu:
             why = str(ocr.get("fallback_reason") or "") or _(
                 "The GPU reader did not start; see the app's log.")
             notes.append(tinted("⚠ " + _("The CPU reader is slow."), "wait") + "<br>"
                          + why)
         self.warning.setText("<br>".join(notes))
         self.warning.setVisible(bool(notes))
-        self.gpu_btn.setVisible(cpu)
+        self.gpu_btn.setVisible(cpu and gpu_built)
         timings = data.get("timings") if isinstance(data.get("timings"), dict) else {}
 
         def ms(part: str) -> str:
@@ -791,6 +892,59 @@ class DiagnosticsCard(Card):
 
 
 # ---- the rest ---------------------------------------------------------------------------
+class StreamCard(Card):
+    """The overlay for streaming: OBS cannot see the overlay window (kept out of every
+    capture, so the HUD never reads its own translations), so the app serves it as a page
+    on this computer that OBS shows as a Browser source above the game."""
+
+    def __init__(self, win) -> None:  # noqa: ANN001
+        super().__init__(win)
+        self.box = QCheckBox(_("Show the translations to OBS"))
+        self.box.setToolTip(_("A page on this computer only, with the translations on a "
+                              "clear background, for a Browser source above the game"))
+        self.box.toggled.connect(self._changed)
+        self.body.addWidget(self.box)
+        urow = QHBoxLayout()
+        self.url = QLabel()
+        self.url.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        urow.addWidget(self.url, 1)
+        self.copy = button(_("Copy"), _("Copy the address"))
+        self.copy.clicked.connect(self._copy)
+        urow.addWidget(self.copy)
+        self.body.addLayout(urow)
+        self.how = note()
+        self.body.addWidget(self.how)
+
+    def refresh(self) -> None:
+        s, session = self.win.settings, self.win.session
+        _set_checked(self.box, s.stream_source)
+        url = session.stream_url
+        self.url.setText(url)
+        for w in (self.url, self.copy, self.how):
+            w.setVisible(bool(url))
+        size = session.picture_size()
+        if size is not None:
+            where = _("width {w} and height {h}").format(w=size[0], h=size[1])
+        else:
+            where = _("the size of the game's picture (its resolution)")
+        self.how.setText(_(
+            "In OBS: add a Browser source with this address and {size}, above your capture "
+            "of the game (Game or Window capture: the game without the overlay).").format(
+            size=where))
+
+    def _changed(self, on: bool) -> None:
+        self.win.settings.stream_source = on
+        self.win.settings.save()
+        self.win.session.apply_stream()
+        self.refresh()
+
+    def _copy(self) -> None:
+        url = self.win.session.stream_url
+        if url:
+            QApplication.clipboard().setText(url)
+            self.win.status(_("Address copied."))
+
+
 class MoreCard(Card):
     """Settings that are set once: the panel's side and handle, the hotkeys, how the reader
     weighs speed against care, and the miss log."""

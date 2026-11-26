@@ -79,6 +79,7 @@ class MainWindow(QWidget):
         self.library = Library(settings)
         self.library.ensure_defaults()
         self.session = HudSession(self.library, settings)
+        self.session.apply_stream()  # (off unless the player switched it on)
         self.session.on_raise = self.keep_on_top
         self.quitting = False
         self.setWindowTitle(APP_NAME)
@@ -379,6 +380,8 @@ class MainWindow(QWidget):
             self.controls.set_running(self.session.running, self.session.busy)
             self.controls.live.show_usage(self.session.live_stats())
             self.controls.more.show_misses()
+            if self.settings.stream_source and self.controls.stream_fold.toggle.isChecked():
+                self.controls.stream.refresh()  # (the game's picture size, once known)
             hud = self.session.hud
             data = hud.diagnostics() if hud is not None and hud.window is not None else None
             self.controls.update_diagnostics(data, self._problem or "")
@@ -552,6 +555,9 @@ class MainWindow(QWidget):
             self.session.stop(quiet=True)
         except Exception:  # noqa: BLE001 - closing goes on
             log.exception("stopping the overlay failed")
+        if self.session.stream is not None:
+            self.session.stream.stop()
+            self.session.stream = None
         try:
             self.settings.save()
         except OSError:

@@ -141,10 +141,43 @@ class HudSession(QObject):
         self._live_gen = 0  # bumped when live translation stops: late answers are dropped
         self.on_raise = None  # called when the overlay goes to the top (the panel follows)
         self.db_state: tuple = ()  # the game's databases when the overlay started
+        self.stream = None  # hud.overlay.stream.StreamServer, while it is switched on
 
     @property
     def running(self) -> bool:
         return self.hud is not None
+
+    # ---- the stream source (OBS) -------------------------------------------------------
+    def apply_stream(self) -> None:
+        """Start or stop the overlay's page for OBS as the settings say. It serves the
+        running overlay, whichever game it is for (none: a clear page)."""
+        from hud.overlay.stream import StreamServer
+
+        if not self.settings.stream_source:
+            if self.stream is not None:
+                self.stream.stop()
+                self.stream = None
+            return
+        if self.stream is None:
+            self.stream = StreamServer(self._stream_overlay)
+        if not self.stream.start(self.settings.stream_port):
+            self.stream = None
+            self.message.emit(_("The page for OBS could not start: every port it tries is "
+                                "taken."))
+
+    def _stream_overlay(self):  # noqa: ANN202 - the overlay window (the server's threads)
+        hud = self.hud
+        return hud.overlay if hud is not None else None
+
+    @property
+    def stream_url(self) -> str:
+        return self.stream.url if self.stream is not None else ""
+
+    def picture_size(self) -> tuple[int, int] | None:
+        """The size of the game's picture (what OBS's source must be), when known."""
+        hud = self.hud
+        frame = hud.overlay.newest_frame if hud is not None else None
+        return (int(frame.shape[1]), int(frame.shape[0])) if frame is not None else None
 
     @property
     def busy(self) -> bool:
@@ -167,6 +200,8 @@ class HudSession(QObject):
             reader_dir=MeikiReader(models_dir()).folder,
             confirmation_mode=s.confirmation_mode,
             cover_mode=lib.cover_mode(game),
+            text_scale=s.text_size / 100.0,
+            plain_text=s.white_text,
             toggle_hotkey=s.toggle_hotkey,
             quit_hotkey=s.stop_hotkey,
             # (the stop hotkey must not tear down its own handler while it runs)
@@ -400,10 +435,17 @@ class HudSession(QObject):
 
 
 def make_backend(settings: Settings, engine: str):  # noqa: ANN201 - a translate.Backend
-    """The live translation engine *engine* ("plamo", "claude", "openai") as the settings
-    have it (raises with a message to show)."""
+    """The live translation engine *engine* (one of app.config.LIVE_ENGINES) as the
+    settings have it (raises with a message to show)."""
     from app.keys import get_key
-    from translate import ClaudeBackend, OpenAIBackend, PlamoBackend, TranslationError
+    from translate import (
+        ClaudeBackend,
+        CompatibleBackend,
+        DeepLBackend,
+        OpenAIBackend,
+        PlamoBackend,
+        TranslationError,
+    )
     from translate.local import MODELS, LocalModels, shared_server
 
     live = settings.live
@@ -416,6 +458,17 @@ def make_backend(settings: Settings, engine: str):  # noqa: ANN201 - a translate
             raise TranslationError(_("no OpenAI API key yet: paste one under Live translation "
                                      "(you pay OpenAI for what you use)."))
         return OpenAIBackend(key, model=live.openai_model)
+    if engine == "deepl":
+        key = get_key("deepl")
+        if not key:
+            raise TranslationError(_("no DeepL API key yet: paste one under Live translation "
+                                     "(DeepL's free plan translates 500,000 characters a "
+                                     "month)."))
+        return DeepLBackend(key)
+    if engine == "custom":
+        if not live.custom_url.strip():
+            raise TranslationError(_("no server address yet: type it under Live translation."))
+        return CompatibleBackend(live.custom_url, live.custom_model, get_key("custom"))
     key = get_key()
     if not key:
         raise TranslationError(_("no Claude API key yet: paste one under Live translation "

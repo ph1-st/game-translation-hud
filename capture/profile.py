@@ -203,6 +203,13 @@ class Profile:
         return any(ig.overlap_fraction(box) >= threshold for ig in self.ignore_regions)
 
     @property
+    def key_prompts(self) -> str | None:
+        """How the game's text names a key it shows as an icon: a regular expression with
+        an ``action`` group (db.lookup.Lookup's key_prompts); None when it has none."""
+        value = self.raw.get("key_prompts")
+        return str(value) if value else None
+
+    @property
     def tickers(self) -> list[Region]:
         """Slots the game scrolls its text through (hud/ticker.py)."""
         return [r for r in self.regions.values() if r.ticker]

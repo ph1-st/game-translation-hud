@@ -425,3 +425,23 @@ def test_the_players_name_fills_the_english_while_the_line_types_out(lookup, pla
     # read before the player's name typed out (and as the capture read the rest)
     hit = match_reading(lookup, "はしめまして、村長さん。私は")
     assert hit is not None and hit.translation == f"Nice to meet you, Chief. I'm {player}."
+
+
+def test_white_text_is_white_with_a_black_outline():
+    from hud.overlay import render_text
+
+    item = OverlayItem((100, 100, 200, 30), lines=["Quest"], font_px=24, row_top=104,
+                       row_h=20, style="label", fg=(80, 150, 255), edge=None)  # fmt: skip
+    _x, _y, coloured = render_text(item)
+    item.plain = True
+    _x, _y, white = render_text(item)
+
+    def colours(rgba):
+        a = rgba[:, :, 3].astype(np.float32)
+        solid = a >= 250  # premultiplied: opaque pixels are their colour
+        return rgba[solid][:, :3].astype(int)
+
+    c, w = colours(coloured), colours(white)
+    assert (c[:, 2] - c[:, 0]).max() > 100  # blue
+    assert (w.max(axis=1) - w.min(axis=1)).max() <= 2  # grey only: white and black
+    assert (w.min(axis=1) >= 250).sum() > 20 and (w.max(axis=1) <= 5).sum() > 20

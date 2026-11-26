@@ -25,6 +25,19 @@ def test_the_engine_the_settings_ask_for(tmp_path, monkeypatch) -> None:
     store.pop("openai")
     with pytest.raises(TranslationError, match="no OpenAI API key"):
         make_backend(s, "openai")
+    from translate import CompatibleBackend, DeepLBackend
+
+    with pytest.raises(TranslationError, match="no DeepL API key"):
+        make_backend(s, "deepl")
+    store["deepl"] = "dl-key:fx"
+    deepl = make_backend(s, "deepl")
+    assert isinstance(deepl, DeepLBackend) and deepl.url.startswith("https://api-free")
+    with pytest.raises(TranslationError, match="no server address"):
+        make_backend(s, "custom")
+    s.live.custom_url, s.live.custom_model = "http://localhost:11434/v1/", "qwen3:8b"
+    other = make_backend(s, "custom")  # (no key: a server on this computer takes none)
+    assert isinstance(other, CompatibleBackend) and other.api_key == ""
+    assert (other.url, other.model) == ("http://localhost:11434/v1", "qwen3:8b")
     with pytest.raises(StopError, match="not installed yet"):  # (nothing downloaded here)
         make_backend(s, "plamo")
 
@@ -116,3 +129,36 @@ def test_installing_plamo_asks_to_accept_its_license_first(panel, monkeypatch) -
     assert text.startswith("PLaMo Community License Agreement") and "Article 5" in text
     assert "18 or older" in intro and "registration" in intro
     assert live.task is None  # declined: nothing downloads
+
+
+def test_the_panel_plugs_in_another_model_by_its_servers_address(panel, monkeypatch) -> None:
+    from translate import SERVERS
+
+    live = panel.controls.live
+    live.engine.setCurrentIndex(live.engine.findData("custom"))
+    live._engine_changed()
+    s = panel.settings.live
+    assert s.enabled and s.engine == "custom"
+    assert not live.server_row.isHidden() and not live.key_row.isHidden()
+    assert live.local_row.isHidden() and live.model.isEditable()
+    assert "usually needs no key" in live.state.text()
+    live._server_chosen(SERVERS["Ollama"])
+    assert s.custom_url == "http://localhost:11434/v1"
+    live.model.setEditText("qwen3:8b")
+    live._model_changed()
+    assert s.custom_model == "qwen3:8b"
+    live._listed["custom"] = ["gemma3:12b", "qwen3:8b"]
+    live.refresh()
+    assert [live.model.itemText(i) for i in range(live.model.count())] == [
+        "qwen3:8b", "gemma3:12b"]
+    live._server_chosen(SERVERS["LM Studio"])  # another server: its own models
+    assert "custom" not in live._listed and s.custom_model == "qwen3:8b"
+
+
+def test_the_panel_offers_deepl_with_a_key_and_no_model(panel) -> None:
+    live = panel.controls.live
+    live.engine.setCurrentIndex(live.engine.findData("deepl"))
+    live._engine_changed()
+    assert panel.settings.live.engine == "deepl"
+    assert not live.key_row.isHidden() and live.model.isHidden()
+    assert live.server_row.isHidden() and "DeepL" in live.key.placeholderText()

@@ -1,8 +1,8 @@
-"""The player's own API keys (Claude, ChatGPT), for live translation and for making a
-database: kept in the system's credential store (Windows Credential Manager; the Secret
-Service, as GNOME Keyring or KWallet, on Linux), never in the settings file, one entry per
-service. Without a credential store a key falls back to a file in the data folder that
-only the user's account can read.
+"""The player's own API keys (Claude, ChatGPT, DeepL, a server of their choosing), for live
+translation and for making a database: kept in the system's credential store (Windows
+Credential Manager; the Secret Service, as GNOME Keyring or KWallet, on Linux), never in the
+settings file, one entry per service. Without a credential store a key falls back to a file
+in the data folder that only the user's account can read.
 
 The functions default to the Claude key, which was the only one before: ``get_key()`` and
 ``set_key(value)`` read and write it under the names it always had."""
@@ -20,7 +20,7 @@ from app.paths import data_dir
 log = logging.getLogger("app")
 
 SERVICE = APP_ID
-SERVICES = ("claude", "openai")
+SERVICES = ("claude", "openai", "deepl", "custom")
 ACCOUNT = "claude-api-key"  # the Claude key's entry (account_for("claude"))
 
 
@@ -50,7 +50,7 @@ def _file(service: str = "claude") -> Path:
 
 
 def get_key(service: str = "claude") -> str:
-    """The stored key of *service* ("claude" or "openai"); empty if none."""
+    """The stored key of *service* (one of SERVICES); empty if none."""
     account, path = account_for(service), _file(service)
     kr = _keyring()
     if kr is not None:

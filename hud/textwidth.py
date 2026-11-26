@@ -113,10 +113,11 @@ def font_px_for_cap(cap_px: float) -> int:
     return max(6, int(round(cap_px / METRICS["cap"])))
 
 
-def font_px_for_glyph(glyph_px: float) -> int:
+def font_px_for_glyph(glyph_px: float, scale: float = 1.0) -> int:
     """The translation's size for Japanese glyphs *glyph_px* tall: capitals at TEXT_SCALE
-    of the glyph height (as tall as the glyphs reads too big next to the game's text)."""
-    return font_px_for_cap(TEXT_SCALE * glyph_px)
+    of the glyph height (as tall as the glyphs reads too big next to the game's text),
+    times the player's *scale* (the panel's text size)."""
+    return font_px_for_cap(TEXT_SCALE * scale * glyph_px)
 
 
 # ---- line breaking ------------------------------------------------------------------------

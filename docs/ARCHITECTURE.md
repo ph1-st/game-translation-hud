@@ -10,8 +10,8 @@ changed.
 The databases are made ahead of time, outside the app: one SQLite file per language,
 shared as a download (a file, a shared Google Drive folder, or an index). While playing,
 the HUD finds each line on screen in that database, and translates only what is missing
-live, if the player wants it: PLaMo on this computer, or the player's own Claude or
-ChatGPT key.
+live, if the player wants it: PLaMo on this computer, the player's own Claude, ChatGPT or
+DeepL key, or any model behind an OpenAI-compatible server the player names.
 
 ## Packages
 
@@ -22,7 +22,7 @@ ChatGPT key.
 | `hud/platform/` | The operating system behind one interface: windows, capture without the overlay, click-through overlay, hotkeys (Windows and X11) |
 | `capture/` | OCR: the standard reader (RapidOCR on ONNX Runtime's DirectML build), MeikiOCR on CUDA in a helper process; game profiles |
 | `db/` | The database: schema, text normalization, templates (`{player}`, `{n}`, `{s}`), lookup (exact, look-alike, prefix, fuzzy), glossary |
-| `translate/` | Live translation: the engines (PLaMo on this computer, Claude, ChatGPT), the local model's install and server (`translate/local.py`), the language table |
+| `translate/` | Live translation: the engines (PLaMo on this computer, Claude, ChatGPT, DeepL, any OpenAI-compatible server: `translate/backends/`), the local model's install and server (`translate/local.py`), the language table |
 | `sync/` | Downloading databases (links, shared Drive folders, indexes), checking every file before it is used |
 | `i18n/` | The app's own interface in other languages (gettext `.po` files) |
 | `games/` | Built-in game profiles (presets): screen layout, dialogue boxes, names |
@@ -65,6 +65,25 @@ format, one line at a time: a short context, the last two lines of the conversat
 source and translation pairs, the glossary entries the line holds
 (`translate/backends/plamo.py`). The model is warmed up when the overlay starts, and lines
 for it are sent sooner than for a paid service.
+
+## Other engines
+
+- **DeepL** (`translate/backends/deepl.py`) is no language model: it gets the lines alone.
+  Placeholders and the glossary's names (already in their translation) go inside `<x>`
+  tags DeepL leaves alone (XML tag handling), and the recent dialogue goes in `context`.
+- **Another model** (`translate/backends/compatible.py`): Chat Completions against the
+  address the player gives (Ollama, LM Studio, llama.cpp, OpenRouter, Gemini…), with the
+  same prompt as Claude and ChatGPT. The answer is asked for as a JSON schema, then as any
+  JSON object, then by the prompt alone, whichever the server takes first (remembered);
+  a reasoning model's `<think>` block is dropped. Nothing is installed for it.
+
+## Streaming
+
+The overlay is out of every capture, OBS's too. `hud/overlay/stream.py` serves it as a
+page on 127.0.0.1 for an OBS Browser source above the game capture: the page asks again
+and again, a request waits until the overlay changed, and each answer is the changed area
+flattened from the window's layers (`OverlayWindow.snapshot`, the recorder's) into one PNG
+with straight alpha, at most 30 a second. Requests to any other host name are refused.
 
 ## Languages
 
@@ -128,6 +147,8 @@ moment it comes, from the reading it was made for, without another read.
 - Never read or write game memory, inject code, hook the process, send input to the game
   or modify game files.
 - The overlay excludes itself from screen capture; it is click-through and always on top.
-- Only text is ever sent anywhere (live translation with Claude or ChatGPT when the player
-  switches it on), never pictures; PLaMo sends nothing. The miss log stays on the player's computer.
+- Only text is ever sent anywhere (live translation with Claude, ChatGPT, DeepL or a server
+  the player names, when the player switches it on), never pictures; PLaMo sends nothing.
+  The stream page for OBS is served on 127.0.0.1 only. The miss log stays on the player's
+  computer.
 - Everything game-specific lives in a game profile; the core is game-agnostic.

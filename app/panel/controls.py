@@ -15,6 +15,7 @@ from app.panel.cards import (
     LiveCard,
     MoreCard,
     ReaderCard,
+    StreamCard,
     TranslateCard,
 )
 from app.widgets import button, link_button, note, scrolled, tinted
@@ -79,11 +80,14 @@ class HudControls(QWidget):
         self.reader = ReaderCard(win)
         self.diagnostics = DiagnosticsCard(win)
         self.more = MoreCard(win)
+        self.stream = StreamCard(win)
         for c in (self.translate, self.dialogue, self.live, self.reader):
             lay.addWidget(c)
         self.diag_fold = Fold(_("Diagnostics"), self.diagnostics)
         self.diag_fold.setVisible(False)
         lay.addWidget(self.diag_fold)
+        self.stream_fold = Fold(_("Streaming (OBS)"), self.stream)
+        lay.addWidget(self.stream_fold)
         lay.addWidget(Fold(_("More"), self.more))
         lay.addStretch(1)
         outer = QVBoxLayout(self)
@@ -91,7 +95,8 @@ class HudControls(QWidget):
         outer.addWidget(scrolled(inner))
 
     def refresh(self) -> None:
-        for c in (self.translate, self.dialogue, self.live, self.reader, self.more):
+        for c in (self.translate, self.dialogue, self.live, self.reader, self.more,
+                  self.stream):
             c.refresh()
         self.refresh_window()
         self.set_running(self.win.session.running, self.win.session.busy)

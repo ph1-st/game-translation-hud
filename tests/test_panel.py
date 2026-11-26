@@ -153,6 +153,22 @@ def test_diagnostics_explains_cpu_fallback_and_timings(panel):
     assert d.gpu_btn.isHidden() and not d.warning.text()
 
 
+def test_a_build_without_a_gpu_reader_does_not_offer_one(panel, monkeypatch):
+    """Linux: ONNX Runtime's CPU build, so no GPU reader to start or try again."""
+    monkeypatch.setattr("app.panel.cards.WINDOWS", False)
+    c = panel.controls
+    c.update_diagnostics({"window": "AzurPromiliaJP", "capture": "xcomposite", "ocr": {
+        "device": "cpu", "requested": "auto", "fallback_reason": "",
+        "providers": ["AzureExecutionProvider", "CPUExecutionProvider"]}})  # fmt: skip
+    d = c.diagnostics
+    assert "Windows only" in d.warning.text() and "did not start" not in d.warning.text()
+    assert d.gpu_btn.isHidden()
+    c.update_diagnostics({"window": "AzurPromiliaJP", "capture": "xcomposite", "ocr": {
+        "device": "cpu", "fallback_reason": "CUDA failed",
+        "providers": ["CUDAExecutionProvider", "CPUExecutionProvider"]}})  # fmt: skip
+    assert "CUDA failed" in d.warning.text() and not d.gpu_btn.isHidden()
+
+
 def test_try_the_gpu_again_lets_the_reader_choose(panel):
     panel.settings.ocr_device = "cpu"
     panel.retry_gpu()
@@ -258,3 +274,26 @@ def test_the_overlays_reader_stops_and_is_waited_for():
     w.stop()
     w.join(timeout=2.0)
     assert not w.is_alive()
+
+
+def test_streaming_serves_the_overlay_to_obs_on_this_computer(panel):
+    panel.settings.stream_port = 0  # (any free port)
+    card = panel.controls.stream
+    assert panel.session.stream is None and card.url.isHidden()
+    card.box.setChecked(True)
+    url = panel.session.stream_url
+    assert url.startswith("http://127.0.0.1:") and card.url.text() == url
+    assert panel.settings.stream_source and "Browser source" in card.how.text()
+    card.box.setChecked(False)
+    assert panel.session.stream is None and not panel.settings.stream_source
+
+
+def test_text_size_and_white_text_are_saved_and_restart_the_overlay(panel, monkeypatch):
+    restarts = []
+    monkeypatch.setattr(panel, "restart_overlay", lambda *a, **k: restarts.append(1))
+    card = panel.controls.translate
+    card.size.setCurrentIndex(card.size.findData(80))
+    card._looks_changed()
+    card.white.setChecked(True)
+    assert (panel.settings.text_size, panel.settings.white_text) == (80, True)
+    assert len(restarts) == 2

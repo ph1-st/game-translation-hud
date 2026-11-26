@@ -50,7 +50,10 @@ from db.templates import (
 )
 
 _BADGE_RE = re.compile(r"^[!-~]{1,6}(?=[^!-~])|(?<=[^!-~])[!-~]{1,6}$")
+# a count after a name: an item received or dropped ("繊維×2", "Fiber x2"), an upgrade ("+5")
+_COUNT_RE = re.compile(r"\s*([×xX✕✖＊*+＋])\s*([0-9０-９]{1,6})\s*$")
 _PUNCT_RE = re.compile(r"[。、！？!?…「」『』()（）・,.:;~〜\"'“”]")
+_WIDE_DIGITS = str.maketrans("０１２３４５６７８９", "0123456789")
 MEMO_SIZE = 8192  # readings whose result is kept
 PREFIX_LIMIT = 200  # candidates looked at for a reading that starts lines
 SEQ_AHEAD = 6  # with a sequence hint: candidates this far on in the script
@@ -79,14 +82,33 @@ class Match:
     score: float  # 0-1
     templated: Templated
     player_fallback: str = "you"  # {player} when no name is known (in the target language)
+    count: str = ""  # a count the reading had after the line (" ×2"), kept in the English
+    prompts: re.Pattern[str] | None = None  # the game's key prompts (Lookup's key_prompts)
 
     @property
     def translation(self) -> str | None:
         """The line's translation with this reading's values filled in."""
         if self.line.translation is None:
             return None
-        return fill(self.line.translation, self.templated.values,
-                    self.templated.player or self.player_fallback, self.templated.words)
+        text = self.line.translation
+        if self.prompts is not None:
+            text = named_prompts(text, self.prompts)
+        return fill(text, self.templated.values, self.templated.player or self.player_fallback,
+                    self.templated.words) + self.count  # fmt: skip
+
+
+def prompt_label(action: str) -> str:
+    """A key prompt's action as words: "MainUltimateSkill" -> "[Ultimate Skill]"."""
+    name = re.sub(r"^(?:Main|Common_|UI_)", "", action) or action
+    words = re.sub(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|_", " ", name).split()
+    return "[" + " ".join(words) + "]"
+
+
+def named_prompts(text: str, prompts: re.Pattern[str]) -> str:
+    """*text* with each key prompt the game shows as an icon ("MainInput/MainEvade") named
+    by its action ("[Evade]"); the same one several times in a row once."""
+    out = prompts.sub(lambda m: prompt_label(m.group("action")), text)
+    return re.sub(r"(\[[^\]]+\])(?:[\s/+]*\1)+", r"\1", out)
 
 
 def _without_badges(text: str, numbers: bool = False) -> str:
@@ -108,16 +130,23 @@ class Lookup:
         min_prefix: int = 4,
         fuzzy_cutoff: float = 85.0,
         player_fallback: str = "you",
+        key_prompts: str | re.Pattern[str] | None = None,
     ) -> None:
         """*player_fallback*: what stands for the player's name in a translation when no
-        name is set and the reading does not show it (``translate.languages.you``)."""
+        name is set and the reading does not show it (``translate.languages.you``).
+        *key_prompts*: how the game's text names a key it shows as an icon (a pattern with
+        an ``action`` group, from the game's profile): its lines are found without it, and
+        their translations name the action."""
         self.player_name = player_name
         self.player_fallback = player_fallback
+        self.prompts = re.compile(key_prompts) if isinstance(key_prompts, str) else key_prompts
         self.min_prefix = min_prefix
         self.fuzzy_cutoff = fuzzy_cutoff
         self.by_key: dict[str, Line] = {}
         for ln in lines:
             key = rekey(ln.key)
+            if self.prompts is not None:
+                key = self.prompts.sub("", key)
             old = self.by_key.get(key)
             if old is None or _rank(ln) > _rank(old):
                 self.by_key[key] = ln
@@ -240,6 +269,9 @@ class Lookup:
             result = self._memo[ocr_text]
         else:
             result = self._match(ocr_text, hint)
+            if result is None or result.kind != "exact":
+                # an item and its count: the item exactly beats a near line with the count
+                result = self._counted(ocr_text, hint) or result
             if result is None:
                 # badges glued onto a label by the OCR ("...NEW", "MAX...") hide the text
                 stripped = _without_badges(ocr_text)
@@ -260,6 +292,21 @@ class Lookup:
             self.last_seq = result.line.seq
         self.stats[result.kind if result is not None else "misses"] += 1
         return result
+
+    def _counted(self, ocr_text: str, hint: int | None) -> Match | None:
+        """A line with a count after it ("繊維×2": two Fiber received): the line as it is,
+        the count kept in the English ("Fiber ×2"). Only an exact line: the start of a
+        longer one is no item."""
+        m = _COUNT_RE.search(ocr_text)
+        if m is None or m.start() == 0:
+            return None
+        found = self._match(ocr_text[: m.start()], hint)
+        if found is None or found.kind != "exact":
+            return None
+        sign = "+" if m.group(1) in "+＋" else "×"
+        digits = m.group(2).translate(_WIDE_DIGITS)
+        found.count = f" {sign}{digits}" if sign == "×" else f" +{digits}"
+        return found
 
     def diagnostics(self) -> dict[str, int]:
         return dict(self.stats)
@@ -388,7 +435,7 @@ class Lookup:
         return self._hit(line, "prefix", s / 100.0 * n / max(len(line.key), 1), t)
 
     def _hit(self, line: Line, kind: str, score: float, t: Templated) -> Match:
-        return Match(line, kind, score, t, self.player_fallback)
+        return Match(line, kind, score, t, self.player_fallback, prompts=self.prompts)
 
     def reset_sequence(self) -> None:
         self.last_seq = None
