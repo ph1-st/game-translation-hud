@@ -15,13 +15,19 @@ from dataclasses import dataclass
 
 from db.lookup import Lookup
 from db.store import Line
-from db.templates import NUMBER, PLAYER, fill, templatize
+from db.templates import NUMBER, PLAYER, WORD, fill, templatize
+from db.text import cjk_count
 from hud.extent import align_span
 
 TRIM_MAX = 2  # characters tried off either end of a reading
 WHOLE_SHARE = 0.8  # a label reading must hold this much of the line it matches...
 WHOLE_MIN = 3  # ...and this many characters besides placeholders
 PARTIAL_REST = 3  # a line this many characters longer than the reading may wrap to the next row
+# Characters an icon, a bar, a dash or a key badge is read as: a line that is one of them
+# alone is never matched (an icon is not "Mouth", a bar is not "One")
+STROKES = set("一ー－‐—―二三口ロ囗十人入八丁卜トエ工日曰目田ハニ了〇○○|")
+NEAR_MIN = 3  # a line matched near, not exactly, holds this many characters besides
+NEAR_CJK = 2  # placeholders, and the reading this many of the game's own characters
 
 
 @dataclass
@@ -35,6 +41,13 @@ class Hit:
     partial: bool = False  # the line goes on past the reading: its next row may hold the rest
 
 
+def _bare(key: str) -> str:
+    """A key without its placeholders."""
+    for p in (NUMBER, WORD, PLAYER):
+        key = key.replace(p, "")
+    return key
+
+
 def match_reading(
     lookup: Lookup, text: str, whole: bool = False, after_seq: int | None = None
 ) -> Hit | None:
@@ -46,6 +59,11 @@ def match_reading(
     m = lookup.match(text, remember=False, after_seq=after_seq)
     if m is None or not m.translation or not m.translation.strip():
         return None
+    line_bare, read_bare = _bare(m.line.key), _bare(m.templated.key)
+    if m.line.key in STROKES:  # (a line of that one character alone: "{n}日" is a line)
+        return None  # an icon or a stroke read as a character
+    if m.kind != "exact" and (len(line_bare) < NEAR_MIN or cjk_count(read_bare) < NEAR_CJK):
+        return None  # too little text to tell: "1234/5678" is no "{n}分{n}秒"
     if whole and m.kind == "prefix":
         key = m.templated.key
         bare = key.replace(NUMBER, "").replace(PLAYER, "")

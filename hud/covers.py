@@ -59,6 +59,9 @@ from hud.textwidth import font_px_for_glyph, text_width, wrap
 log = logging.getLogger("hud")
 
 MIN_CONF = 0.6  # readings below this are never matched (they still count as obstacles)
+# ...and a reading of one character of the game's script below this (an icon, a scrap of the
+# scene read as 日 or 三 is less sure than the crisp text of a label)
+SHORT_CONF = 0.9
 REREAD_MAX = 12  # lines a scan reads a second time at most (CoverMaker.reread)
 ALIGN_TOL = 0.4  # stacked labels whose edges agree within this many glyph heights
 SAME_SIZE = 1.0  # glyph heights (pixels) this close may be one size of the game's text
@@ -131,6 +134,7 @@ class CoverMaker:
         return (
             line.conf >= MIN_CONF
             and cjk_count(line.text) > 0
+            and (line.conf >= SHORT_CONF or cjk_count(line.text) >= 2)
             and looks_like_text(line.text, min_jp=1)
             and not self.profile.is_ignored(line.box)
         )

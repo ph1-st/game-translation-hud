@@ -128,7 +128,8 @@ def test_a_problem_is_said_once_and_opens_the_diagnostics(panel):
     panel.session.hud = None
 
 
-def test_diagnostics_explains_cpu_fallback_and_timings(panel):
+def test_diagnostics_explains_cpu_fallback_and_timings(panel, monkeypatch):
+    monkeypatch.setattr("app.panel.cards.WINDOWS", True)  # (a build with a GPU reader)
     data = {
         "window": "Azur Promilia",
         "capture": "dxcam",

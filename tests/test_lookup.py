@@ -223,6 +223,22 @@ def test_a_glossary_file_serves_every_language_it_holds(tmp_path):
 
 
 
+def test_icons_bars_and_numbers_are_never_taken_for_a_line():
+    from hud.matching import match_reading
+
+    lk = Lookup([mk("三", 1, "Three"), mk("ロ", 2, "Mouth"), mk("一", 3, "One"),
+                 mk("残り5分10秒", 4, "{n}m {n}s left"), mk("10分20秒", 5, "{n}m {n}s"),
+                 mk("毒", 6, "Poison"), mk("攻撃力", 7, "ATK")])  # fmt: skip
+    for reading in ["三", "E三C", "口", "ー", "一", "1234/5678", "HP 1234/5678", "12:34",
+                    "10:20"]:
+        assert match_reading(lk, reading, whole=True) is None, reading
+    assert match_reading(lk, "10分20秒", whole=True).translation == "10m 20s"
+    assert match_reading(lk, "毒", whole=True).translation == "Poison"  # (a real label)
+    days = Lookup([mk("3日", 1, "{n} days")])
+    assert match_reading(days, "3日", whole=True).translation == "3 days"  # (日 in a line)
+    assert match_reading(lk, "攻撃カ", whole=True).translation == "ATK"  # (misread: near)
+
+
 def test_an_item_with_its_count_is_the_item_and_the_count_stays():
     lk = Lookup([mk("繊維", 1, "Fiber"), mk("軟らかい木", 2, "Soft Wood"),
                  mk("木材", 3, "Lumber"), mk("強化素材セット", 4, "Upgrade Set"),
